@@ -65,7 +65,7 @@ router.route("/user/init").all(checkAuth).post(initUser);
 router.route("/user/generate-otp").post(forgotUserPassword);
 
 router.route("/get-all-restaurants").get(getAllRestaurants)
-// Reset Password
+
 router.route("/user/reset-password").post(resetUserPassword);
 
 router.route("/add-new-address").post(updateUserAddress);
