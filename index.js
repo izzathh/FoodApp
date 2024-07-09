@@ -8,6 +8,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const connectToDB = require("./db/db.connections");
 const userRoutes = require("./routes/user.router");
 const orderRoutes = require("./routes/orders.router");
+const deliveryPeopleRoutes = require("./routes/deliveryPeople.router")
 const adminRoutes = require("./routes/admin.router");
 const handleErrors = require("./middlewares/handleErrors");
 const cookieParser = require("cookie-parser");
@@ -69,8 +70,11 @@ app.get("/admin-actions/check-auth", authenticationToken, async (req, res) => {
 
 app.use("/user-actions", userRoutes);
 app.use("/user-actions", orderRoutes);
+
 app.use("/admin-actions", adminRoutes);
 app.use("/admin-actions", orderRoutes);
+
+app.use("/dp-actions", deliveryPeopleRoutes);
 
 app.use(handleErrors);
 

@@ -266,5 +266,6 @@ module.exports = {
   forgotUserPassword,
   resetUserPassword,
   updateUserAddress,
-  getUserAddresses
+  getUserAddresses,
+  generateOtp
 };
