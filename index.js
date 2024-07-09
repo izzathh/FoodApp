@@ -12,10 +12,9 @@ const adminRoutes = require("./routes/admin.router");
 const handleErrors = require("./middlewares/handleErrors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const Admin = require("./models/admin.model");
 const bodyParser = require("body-parser");
 const { initializeWebSocketServer } = require("./websocket");
-
+const Admins = require('./models/admin.model')
 
 initializeWebSocketServer(server);
 
@@ -62,7 +61,9 @@ const authenticationToken = (req, res, next) => {
   });
 };
 
-app.get("/admin-actions/check-auth", authenticationToken, (req, res) => {
+app.get("/admin-actions/check-auth", authenticationToken, async (req, res) => {
+  const checkAdmin = await Admins.findById(req.user.id);
+  if (!checkAdmin) return res.sendStatus(404);
   res.sendStatus(200);
 });
 

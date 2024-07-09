@@ -92,6 +92,9 @@ const updateOrderStatus = async (req, res) => {
 const getRestaurantOrderList = async (req, res) => {
     try {
         const { restaurantId } = req.query;
+        if (!restaurantId || !mongoose.Types.ObjectId.isValid(restaurantId)) {
+            return res.status(400).json({ status: 0, message: 'Please enter a valid restaurant ID' })
+        }
         const getRestaurantOrders = await Orders.find({ restaurantId, status: 'confirmed' })
         console.log('getRestaurantOrders:', getRestaurantOrders);
         return res.json({ status: 1, orders: getRestaurantOrders })
@@ -100,9 +103,27 @@ const getRestaurantOrderList = async (req, res) => {
     }
 }
 
+const getAllOrders = async (req, res) => {
+    try {
+        const { restaurantId } = req.query;
+
+        if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+            return res.status(500).json({ status: 0, message: 'Please enter a valid restaurant id' })
+        }
+
+        const getOrders = await Orders.find({ restaurantId, status: 'confirmed' });
+
+        return res.status(200).json({ status: 1, totalOrders: getOrders.length, orders: getOrders })
+    } catch (error) {
+        console.log('getAllOrders:', error);
+        return res.status(500).json({ status: 0, message: 'Error getting orders', error })
+    }
+}
+
 module.exports = {
     placeOrder,
     getPendingOrders,
     updateOrderStatus,
-    getRestaurantOrderList
+    getRestaurantOrderList,
+    getAllOrders
 }

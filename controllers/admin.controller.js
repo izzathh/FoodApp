@@ -112,7 +112,8 @@ const adminLogin = async (req, res, next) => {
 
     const payload = {
       id: admin._id,
-      adminType: admin.adminType
+      adminType: admin.adminType,
+      restaurantId: admin.adminType === 'shop-admin' ? admin.restaurantId : null
     }
     jwt.sign(
       payload,
