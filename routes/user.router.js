@@ -14,7 +14,8 @@ const {
   initUser,
   forgotUserPassword,
   resetUserPassword,
-  updateUserAddress
+  updateUserAddress,
+  getUserAddresses
 } = require("../controllers/user.controller");
 const checkAdmin = require("../middlewares/checkAdmin");
 const checkAuth = require("../middlewares/checkAuth");
@@ -68,5 +69,7 @@ router.route("/get-all-restaurants").get(getAllRestaurants)
 router.route("/user/reset-password").post(resetUserPassword);
 
 router.route("/add-new-address").post(updateUserAddress);
+
+router.route("/get-all-address").get(getUserAddresses);
 
 module.exports = router;
