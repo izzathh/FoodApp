@@ -10,6 +10,7 @@ const {
   fetchUserFromEmailAndOtp,
 } = require("../services/auth.service");
 const { default: mongoose } = require("mongoose");
+const moment = require("moment")
 
 const registerAdmin = async (req, res, next) => {
   const { email, password, branchName, branchCode, adminType } = req.body;
@@ -534,7 +535,8 @@ const registerRestaurant = async (req, res) => {
       password,
       username,
       adminType: 'shop-admin',
-      restaurantId: mongoose.Types.ObjectId(newRestaurant._id)
+      restaurantId: mongoose.Types.ObjectId(newRestaurant._id),
+      registeredAt: moment().format('YYYY-MM-DD HH:mm:ss'),
     })
 
     await newAdmin.save()

@@ -2,6 +2,8 @@ const DeliveryPeople = require("../models/deliveryPeople.model");
 const User = require("../models/user.model");
 const { NotFound, BadRequest, ValidationError } = require("../utils/errors");
 const { generateOtp } = require("./user.controller")
+const moment = require("moment")
+
 const registerDeliveryPeople = async (req, res, next) => {
     try {
         const {
@@ -25,6 +27,7 @@ const registerDeliveryPeople = async (req, res, next) => {
         const newDeliveryPeople = new DeliveryPeople({
             vehicleNumber,
             name,
+            registeredAt: moment().format('YYYY-MM-DD HH:mm:ss'),
             phoneNumber
         });
         await newDeliveryPeople.save();
@@ -59,11 +62,27 @@ const deliveryPeopleLogin = async (req, res, next) => {
             return res.status(200).json({ message })
         }
         const getOtp = generateOtp();
-        return res.status(200).json({ otp: getOtp, user: dp })
+        return res.status(200).json({
+            status: 1,
+            message: 'Logged in successfully',
+            data: {
+                otp: getOtp,
+                user: dp
+            }
+        })
     } catch (error) {
         console.log(error);
         next(error);
     }
 };
 
-module.exports = { registerDeliveryPeople, deliveryPeopleLogin }
+const getPendingRegistrations = async (req, res) => {
+    try {
+        const dp = await DeliveryPeople.find({ adminApproved: false, adminDeclined: false });
+        return res.status(200).json({ status: 1, registrations: dp })
+    } catch (error) {
+        console.log('getPendingRegistrations:', error);
+        next(error);
+    }
+}
+module.exports = { registerDeliveryPeople, deliveryPeopleLogin, getPendingRegistrations }

@@ -21,6 +21,9 @@ const deliveryPeopleSchema = new mongoose.Schema(
         adminDeclined: {
             type: Boolean,
             default: false
+        },
+        registeredAt: {
+            type: String
         }
     }, {
     timestamps: true

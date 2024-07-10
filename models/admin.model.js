@@ -39,7 +39,8 @@ const AdminSchema = new Schema(
     restaurantDeclined: {
       type: Boolean,
       default: false
-    }
+    },
+    registeredAt: { type: String }
   },
   { timestamps: true }
 );

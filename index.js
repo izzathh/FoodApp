@@ -73,6 +73,7 @@ app.use("/user-actions", orderRoutes);
 
 app.use("/admin-actions", adminRoutes);
 app.use("/admin-actions", orderRoutes);
+app.use("/admin-actions", deliveryPeopleRoutes);
 
 app.use("/dp-actions", deliveryPeopleRoutes);
 
