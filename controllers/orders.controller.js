@@ -55,7 +55,7 @@ const placeOrder = async (req, res) => {
 
     } catch (error) {
         console.log('error:', error);
-        return res.status(500).json({ status: 0, messgae: error })
+        return res.status(500).json({ status: 0, message: error })
     }
 }
 
@@ -65,7 +65,7 @@ const getPendingOrders = async (req, res) => {
         return res.json({ status: 1, orders: getPendingOrders })
     } catch (error) {
         console.log('getPendingOrders:', error);
-        return res.status(500).json({ status: 0, messgae: error })
+        return res.status(500).json({ status: 0, message: error })
     }
 }
 
@@ -88,10 +88,10 @@ const updateOrderStatus = async (req, res) => {
             });
             return res.json({ status: 1, message: 'Order status changed', updateStatus })
         }
-        return res.status(500).json({ status: 0, messgae: 'Cannot update order status' })
+        return res.status(500).json({ status: 0, message: 'Cannot update order status' })
     } catch (error) {
         console.log('updateOrderStatus:', error);
-        return res.status(500).json({ status: 0, messgae: error })
+        return res.status(500).json({ status: 0, message: error })
     }
 }
 
@@ -105,7 +105,7 @@ const getRestaurantOrderList = async (req, res) => {
         console.log('getRestaurantOrders:', getRestaurantOrders);
         return res.json({ status: 1, orders: getRestaurantOrders })
     } catch (error) {
-        return res.status(500).json({ status: 0, messgae: error })
+        return res.status(500).json({ status: 0, message: error })
     }
 }
 
