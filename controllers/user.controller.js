@@ -224,14 +224,15 @@ const resetUserPassword = async (req, res, next) => {
 
 const updateUserAddress = async (req, res) => {
   try {
-    const { userId, address } = req.body;
+    const { userId, address, title } = req.body;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(500).json({ status: 0, message: 'Enter a valid user id' })
     }
-    if (!userId || !address) return res.status(500).json({ status: 0, message: 'Send the required fields' })
+    if (!userId || !address || !title)
+      return res.status(500).json({ status: 0, message: 'Send the required fields' })
     const getUser = await User.findById(userId);
     if (!getUser) return res.status(404).json({ status: 0, message: 'User Not Found' })
-    getUser.addresses.push(address)
+    getUser.addresses.push({ address, title })
     await getUser.save()
     return res.status(200).json({ status: 1, messgae: 'New address added successfully' })
 
