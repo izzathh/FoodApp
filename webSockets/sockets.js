@@ -1,5 +1,6 @@
 const Orders = require('../models/orders.model')
 const Admin = require('../models/admin.model')
+const DeliveryPeople = require('../models/deliveryPeople.model')
 const WebSocket = require('ws');
 
 const checkOrderRequest = async (wss) => {
@@ -34,7 +35,23 @@ const checkRestaurantRequest = async (wss) => {
     })
 }
 
+const checkDeliveryRegistration = async (wss) => {
+    const dpRegistrationChange = DeliveryPeople.watch()
+
+    dpRegistrationChange.on('change', (data) => {
+        if (data.operationType === 'insert' && !data.fullDocument.adminApproved) {
+            const regApplication = data.fullDocument
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: 'newDeliveryPeople', application: regApplication }))
+                }
+            })
+        }
+    })
+}
+
 module.exports = {
     checkOrderRequest,
-    checkRestaurantRequest
+    checkRestaurantRequest,
+    checkDeliveryRegistration
 }

@@ -1,5 +1,10 @@
 const WebSocket = require('ws');
-const { checkOrderRequest, checkRestaurantRequest } = require("./webSockets/sockets");
+const {
+    checkOrderRequest,
+    checkRestaurantRequest,
+    checkDeliveryRegistration
+} = require("./webSockets/sockets");
+
 let wss;
 
 function initializeWebSocketServer(server) {
@@ -11,6 +16,7 @@ function initializeWebSocketServer(server) {
     //WEBSOCKET FUNCTIONS -> STARTS
     checkOrderRequest(wss);
     checkRestaurantRequest(wss);
+    checkDeliveryRegistration(wss);
     //WEBSOCKET FUNCTIONS -> ENDS
     return wss;
 }
