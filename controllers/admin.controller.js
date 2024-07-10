@@ -76,6 +76,7 @@ const registerAdmin = async (req, res, next) => {
             savedUser.__v = undefined;
             savedUser.password = undefined;
             res.status(201).json({
+              status: 1,
               message: "Admin created Successfully",
               token,
               user: savedUser,
@@ -138,7 +139,7 @@ const adminLogin = async (req, res, next) => {
         res.cookie('auth_token', token, options);
         res
           .status(200)
-          .json({ message: "You are logged in", token, admin });
+          .json({ status: 1, message: "You are logged in", token, admin });
       }
     );
   } catch (error) {
@@ -254,6 +255,7 @@ const editAdminDetails = async (req, res, next) => {
 
         const updatedUser = await admin.save();
         return res.status(200).json({
+          status: 1,
           message: "user details updated sucessfully!",
           user: updatedUser,
         });
@@ -298,11 +300,11 @@ const addNewRestaurant = async (req, res) => {
 
     await addRestaurant.save()
 
-    return res.json({ status: '1', message: 'New restaurant added', restaurant: addRestaurant })
+    return res.json({ status: 1, message: 'New restaurant added', restaurant: addRestaurant })
 
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ addRestaurant: 'Internal Server Error' });
+    return res.status(500).json({ status: 0, addRestaurant: 'Internal Server Error' });
   }
 }
 
@@ -310,10 +312,10 @@ const getAllRestaurants = async (req, res) => {
   try {
     const getRestaurants = await Restaurant
       .find({ adminApproved: true })
-    return res.json({ restaurants: getRestaurants })
+    return res.json({ status: 1, restaurants: getRestaurants })
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ getAllRestaurants: 'Internal Server Error' });
+    return res.status(500).json({ status: 0, getAllRestaurants: 'Internal Server Error' });
   }
 }
 
@@ -322,10 +324,10 @@ const getEditRestaurantData = async (req, res) => {
     const { id } = req.query
     const getRestaurants = await Restaurant
       .findById(id);
-    return res.json({ restaurantData: getRestaurants })
+    return res.json({ status: 1, restaurantData: getRestaurants })
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ getEditRestaurantData: 'Internal Server Error' });
+    return res.status(500).json({ status: 0, getEditRestaurantData: 'Internal Server Error' });
   }
 }
 
@@ -363,14 +365,14 @@ const updateRestaurant = async (req, res) => {
     }
 
     return res.json({
-      status: '1',
+      status: 1,
       message: 'Restaurant updated successfully',
       updatedRes: updatedRestaurant,
     });
 
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ updateRestaurant: 'Internal Server Error' });
+    return res.status(500).json({ status: 0, updateRestaurant: 'Internal Server Error' });
   }
 }
 
@@ -379,12 +381,12 @@ const deleteRestaurant = async (req, res) => {
     const { id } = req.query;
     await Restaurant.findByIdAndDelete(id);
     return res.json({
-      status: '1',
+      status: 1,
       message: 'Resturant deleted successfully'
     })
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ deleteRestaurant: 'Internal Server Error' });
+    return res.status(500).json({ status: 0, deleteRestaurant: 'Internal Server Error' });
   }
 }
 
@@ -420,7 +422,7 @@ const addMenuItems = async (req, res) => {
     await updatedRestaurant.save();
 
     return res.json({
-      status: '1',
+      status: 1,
       message: 'Item added successfully',
       updatedRestaurant
     })
@@ -428,7 +430,7 @@ const addMenuItems = async (req, res) => {
   } catch (error) {
     console.log('addMenuItems:', error);
     return res.status(500).json({
-      status: '0',
+      status: 0,
       message: 'Internal server error'
     })
   }
@@ -486,11 +488,10 @@ const deleteMenuItem = async (req, res) => {
       { _id: mongoose.Types.ObjectId(restaurantId) },
       { $pull: { menu: { id: menuId } } }
     )
-
-    return res.json({ status: '1', message: 'Menu item deleted successfully', result })
+    return res.json({ status: 1, message: 'Menu item deleted successfully', result })
   } catch (error) {
     console.log('deleteMenuItem:', error);
-    return res.status(500).json({ status: '0', message: 'Error deleting menu item' })
+    return res.status(500).json({ status: 0, message: 'Error deleting menu item' })
   }
 }
 
@@ -548,7 +549,7 @@ const registerRestaurant = async (req, res) => {
 
   } catch (error) {
     console.log('error:', error);
-    return res.status(500).json({ status: '0', message: 'Error registering restaurant', error })
+    return res.status(500).json({ status: 0, message: 'Error registering restaurant', error })
   }
 }
 

@@ -38,7 +38,9 @@ const registerUser = async (req, res, next) => {
     return res.status(201).json({
       status: 1,
       message: "User Created Successfully!",
-      newUser
+      data: {
+        newUser
+      }
     });
   } catch (error) {
     console.error(error);
@@ -173,11 +175,18 @@ const userLogin = async (req, res, next) => {
 
     const user = await User.findOne({ phoneNumber: phonenumber });
     if (!user) {
-      return res.status(404).json({ message: "This user does not exist" });
+      return res.status(404).json({ status: 0, message: "This user does not exist", data: null });
     }
 
     const getOtp = generateOtp();
-    return res.status(200).json({ otp: getOtp, user })
+    return res.status(200).json({
+      status: 1,
+      message: 'Logged in successfully',
+      data: {
+        otp: getOtp,
+        user
+      }
+    })
   } catch (error) {
     console.log(error);
     next(error);
@@ -234,11 +243,11 @@ const updateUserAddress = async (req, res) => {
     if (!getUser) return res.status(404).json({ status: 0, message: 'User Not Found' })
     getUser.addresses.push({ address, title })
     await getUser.save()
-    return res.status(200).json({ status: 1, messgae: 'New address added successfully' })
+    return res.status(200).json({ status: 1, message: 'New address added successfully' })
 
   } catch (error) {
     console.log('updateUserAddress:', error);
-    return res.status(500).json({ status: 0, messgae: error })
+    return res.status(500).json({ status: 0, message: error })
   }
 }
 
@@ -250,10 +259,14 @@ const getUserAddresses = async (req, res) => {
     }
     const getUser = await User.findById(userId);
     if (!getUser) return res.status(404).json({ status: 0, message: 'User Not Found' })
-    return res.status(200).json({ status: 1, addresses: getUser.addresses })
+    return res.status(200).json({
+      status: 1,
+      message: "Fetched user addresses successfully",
+      addresses: getUser.addresses
+    })
   } catch (error) {
     console.log('getUserAddresses:', error);
-    return res.status(500).json({ status: 0, messgae: error })
+    return res.status(500).json({ status: 0, message: error })
   }
 }
 

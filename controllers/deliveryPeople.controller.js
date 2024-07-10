@@ -59,7 +59,7 @@ const deliveryPeopleLogin = async (req, res, next) => {
             const message = dp.adminDeclined
                 ? "Your application has been declined, please try again later"
                 : "Your application is still under review. Please wait for approval."
-            return res.status(200).json({ message })
+            return res.status(200).json({ status: 0, message })
         }
         const getOtp = generateOtp();
         return res.status(200).json({

@@ -45,7 +45,13 @@ const placeOrder = async (req, res) => {
 
         await newOrder.save();
 
-        return res.json({ status: '1', message: 'Order placed successfully', order: newOrder })
+        return res.json({
+            status: 1,
+            message: 'Order placed successfully',
+            data: {
+                order: newOrder
+            }
+        })
 
     } catch (error) {
         console.log('error:', error);
@@ -56,7 +62,7 @@ const placeOrder = async (req, res) => {
 const getPendingOrders = async (req, res) => {
     try {
         const getPendingOrders = await Orders.find({ status: 'pending' })
-        return res.json({ status: '1', orders: getPendingOrders })
+        return res.json({ status: 1, orders: getPendingOrders })
     } catch (error) {
         console.log('getPendingOrders:', error);
         return res.status(500).json({ status: 0, messgae: error })
