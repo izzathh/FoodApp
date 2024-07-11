@@ -15,7 +15,7 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const { initializeWebSocketServer } = require("./websocket");
-const Admins = require('./models/admin.model')
+const Admins = require('./models/admin.model');
 
 initializeWebSocketServer(server);
 
@@ -67,6 +67,24 @@ app.get("/admin-actions/check-auth", authenticationToken, async (req, res) => {
   if (!checkAdmin) return res.sendStatus(404);
   res.sendStatus(200);
 });
+
+// const first2 = (x) => x + 80
+// const second2 = (x) => x - 10
+// const third2 = (x) => x - 70
+// const fourth2 = (x) => x + 8
+// const fifth2 = (x) => x + 10
+
+// const numberPipe = [first2, second2, third2, fourth2, fifth2]
+
+// let getNum = '';
+// numberPipe.reduce((acc, f) => {
+//   const outputs = f(acc)
+//   getNum = getNum + `${outputs}`
+//   getNum = Number(getNum)
+//   return acc = outputs
+// }, 10)
+
+// console.log('myNumber:', getNum);
 
 app.use("/user-actions", userRoutes);
 app.use("/user-actions", orderRoutes);

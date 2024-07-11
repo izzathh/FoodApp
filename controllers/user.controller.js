@@ -15,12 +15,16 @@ const registerUser = async (req, res, next) => {
     const {
       name,
       email,
-      phonenumber
+      phonenumber,
+      address,
+      latlng
     } = req.body;
     if (
       !email ||
       !phonenumber ||
-      !name
+      !name ||
+      !address ||
+      !latlng
     ) {
       throw new BadRequest("Please enter all fields");
     }
@@ -32,7 +36,8 @@ const registerUser = async (req, res, next) => {
     const newUser = new User({
       email,
       name,
-      phoneNumber: phonenumber
+      phoneNumber: phonenumber,
+      addresses: [{ address, title: 'home', default: true, latlng }]
     });
     await newUser.save();
     return res.status(201).json({
@@ -233,17 +238,34 @@ const resetUserPassword = async (req, res, next) => {
 
 const updateUserAddress = async (req, res) => {
   try {
-    const { userId, address, title } = req.body;
+    const { userId, address, title, latlng } = req.body;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(500).json({ status: 0, message: 'Enter a valid user id' })
     }
-    if (!userId || !address || !title)
+    if (!userId || !address || !title || !latlng)
       return res.status(500).json({ status: 0, message: 'Send the required fields' })
+
     const getUser = await User.findById(userId);
+
     if (!getUser) return res.status(404).json({ status: 0, message: 'User Not Found' })
-    getUser.addresses.push({ address, title })
-    await getUser.save()
-    return res.status(200).json({ status: 1, message: 'New address added successfully' })
+    const isExistingAdd = getUser.addresses.filter(exist => exist.address == address)
+    if (isExistingAdd.length > 0)
+      return res.status(200).json({ status: 0, message: 'Please select a new address' })
+
+    getUser.addresses.push({ address, title, default: true, latlng })
+    getUser.addresses.map(adrs => {
+      if (adrs.default && adrs.address != address) adrs.default = false
+    });
+    await User.findByIdAndUpdate(getUser._id, {
+      $set: { addresses: getUser.addresses }
+    })
+    return res.status(200).json({
+      status: 1,
+      message: 'New address added successfully',
+      data: {
+        addresses: getUser.addresses
+      }
+    })
 
   } catch (error) {
     console.log('updateUserAddress:', error);
@@ -270,6 +292,33 @@ const getUserAddresses = async (req, res) => {
   }
 }
 
+const changeUserDefaultAddress = async (req, res, next) => {
+  try {
+    const { userId, addressId } = req.body;
+    if (!userId || !addressId)
+      return res.status(500).json({ status: 0, message: 'Send the required fields' })
+    const getUser = await User.findById(userId)
+    if (!getUser) return res.status(404).json({ status: 0, message: 'User Not Found' })
+    getUser.addresses.map(adrs => {
+      if (adrs.default) adrs.default = false
+    })
+    getUser.addresses[addressId].default = true
+    await User.findByIdAndUpdate(userId, {
+      $set: { addresses: getUser.addresses }
+    })
+    return res.status(200).json({
+      status: 1,
+      message: 'New default address updated successfully',
+      data: {
+        addresses: getUser.addresses
+      }
+    })
+  } catch (error) {
+    console.log('changeUserDefaultAddress:', error);
+    next(error);
+  }
+}
+
 module.exports = {
   registerUser,
   getAllUsers,
@@ -281,5 +330,6 @@ module.exports = {
   resetUserPassword,
   updateUserAddress,
   getUserAddresses,
-  generateOtp
+  generateOtp,
+  changeUserDefaultAddress
 };

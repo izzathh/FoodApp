@@ -15,7 +15,8 @@ const {
   forgotUserPassword,
   resetUserPassword,
   updateUserAddress,
-  getUserAddresses
+  getUserAddresses,
+  changeUserDefaultAddress
 } = require("../controllers/user.controller");
 const checkAdmin = require("../middlewares/checkAdmin");
 const checkAuth = require("../middlewares/checkAuth");
@@ -71,5 +72,8 @@ router.route("/user/reset-password").post(resetUserPassword);
 router.route("/add-new-address").post(updateUserAddress);
 
 router.route("/get-all-address").get(getUserAddresses);
+
+router.route("/change-default-address").post(changeUserDefaultAddress);
+
 // new changes
 module.exports = router;

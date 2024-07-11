@@ -24,6 +24,17 @@ const deliveryPeopleSchema = new mongoose.Schema(
         },
         registeredAt: {
             type: String
+        },
+        shiftStatus: {
+            type: Number,
+            enum: [0, 1],
+            default: 0
+        },
+        latitude: {
+            type: String
+        },
+        longitude: {
+            type: String
         }
     }, {
     timestamps: true
