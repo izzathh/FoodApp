@@ -312,7 +312,13 @@ const getAllRestaurants = async (req, res) => {
   try {
     const getRestaurants = await Restaurant
       .find({ adminApproved: true })
-    return res.json({ status: 1, restaurants: getRestaurants })
+    return res.json({
+      status: 1,
+      message: "Fetched all restaurants",
+      data: {
+        restaurants: getRestaurants
+      }
+    })
   } catch (error) {
     console.log('error:', error);
     return res.status(500).json({ status: 0, getAllRestaurants: 'Internal Server Error' });
