@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/v1/home", (req, res) => {
+app.get("/api/v1/home", (req, res) => {
   res.send("Hello 👋🏻, I am from MyStore backend!");
 });
 
@@ -62,38 +62,20 @@ const authenticationToken = (req, res, next) => {
   });
 };
 
-app.get("/admin-actions/check-auth", authenticationToken, async (req, res) => {
+app.get("/api/v1/admin-actions/check-auth", authenticationToken, async (req, res) => {
   const checkAdmin = await Admins.findById(req.user.id);
   if (!checkAdmin) return res.sendStatus(404);
   res.sendStatus(200);
 });
 
-// const first2 = (x) => x + 80
-// const second2 = (x) => x - 10
-// const third2 = (x) => x - 70
-// const fourth2 = (x) => x + 8
-// const fifth2 = (x) => x + 10
+app.use("/api/v1/user-actions", userRoutes);
+app.use("/api/v1/user-actions", orderRoutes);
 
-// const numberPipe = [first2, second2, third2, fourth2, fifth2]
+app.use("/api/v1/admin-actions", adminRoutes);
+app.use("/api/v1/admin-actions", orderRoutes);
+app.use("/api/v1/admin-actions", deliveryPeopleRoutes);
 
-// let getNum = '';
-// numberPipe.reduce((acc, f) => {
-//   const outputs = f(acc)
-//   getNum = getNum + `${outputs}`
-//   getNum = Number(getNum)
-//   return acc = outputs
-// }, 10)
-
-// console.log('myNumber:', getNum);
-
-app.use("/user-actions", userRoutes);
-app.use("/user-actions", orderRoutes);
-
-app.use("/admin-actions", adminRoutes);
-app.use("/admin-actions", orderRoutes);
-app.use("/admin-actions", deliveryPeopleRoutes);
-
-app.use("/dp-actions", deliveryPeopleRoutes);
+app.use("/api/v1/dp-actions", deliveryPeopleRoutes);
 
 app.use(handleErrors);
 

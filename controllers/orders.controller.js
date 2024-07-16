@@ -3,6 +3,8 @@ const Orders = require('../models/orders.model')
 const moment = require("moment");
 const WebSocket = require('ws');
 const { getWebSocketServer } = require('../websocket');
+const { getFirebaseAdmin } = require('../firebase');
+const DeliveryPeople = require('../models/deliveryPeople.model');
 
 const placeOrder = async (req, res) => {
     try {
@@ -76,10 +78,42 @@ const updateOrderStatus = async (req, res) => {
         const updateStatus = await Orders.findOneAndUpdate(
             { orderId },
             { $set: { status } },
-            { new: true, fields: { menu: 0 } }
+            { new: true }
         )
 
+        if (updateStatus && updateStatus.menu && Array.isArray(updateStatus.menu)) {
+            updateStatus.menu = updateStatus.menu.map(item => {
+                const { image, ...rest } = item;
+                return rest;
+            });
+        }
+        console.log('updateStatus:', updateStatus);
+
         if (updateStatus) {
+            if (status === 'confirmed') {
+                const admin = getFirebaseAdmin();
+                const getDeliveryPeoples = await DeliveryPeople.findOne({
+                    adminApproved: true,
+                    shiftStatus: 1
+                })
+                if (getDeliveryPeoples && getDeliveryPeoples.fcmToken) {
+                    const message = {
+                        data: {
+                            orderDetails: JSON.stringify(updateStatus),
+                            orderAccepted: false
+                        },
+                        // token: 'c9lgd5VGRb-Nr9n-EMU8M0:APA91bEJm5RwPTfvsX760_gk5o2whTuav_zTZO29VftFifRAKN-45Bf4vipY1IQEyMjQ8RZlpsS1kq345JlQqtspk6PprhJwMzsEtPGtvZUFcYK2AiBtlfmfx0Hd4pEplf9drAbncK4Q'
+                        token: getDeliveryPeoples.fcmToken
+                    }
+                    admin.messaging().send(message)
+                        .then((response) => {
+                            console.log('firebase message sent to delivery people', response);
+                        })
+                        .catch((err) => {
+                            console.log('error sending firebase message', err);
+                        })
+                }
+            }
             const wss = getWebSocketServer();
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {

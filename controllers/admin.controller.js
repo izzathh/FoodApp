@@ -295,6 +295,7 @@ const addNewRestaurant = async (req, res) => {
       veg,
       description,
       fullDescription,
+      adminApproved: true,
       image: 'data:image/png;base64,' + image.buffer.toString('base64')
     })
 
@@ -367,7 +368,7 @@ const updateRestaurant = async (req, res) => {
       }, { new: true });
 
     if (!updatedRestaurant) {
-      return res.status(404).json({ status: '0', message: 'Restaurant not found' });
+      return res.status(404).json({ status: 0, message: 'Restaurant not found' });
     }
 
     return res.json({
@@ -458,7 +459,7 @@ const editMenuItems = async (req, res) => {
       menuId
     } = req.body;
     if (!isValidObjectId(restaurantId)) {
-      return res.status(400).json({ status: '0', message: 'Invalid restaurant ID' });
+      return res.status(400).json({ status: 0, message: 'Invalid restaurant ID' });
     }
     const restaurantObjectId = mongoose.Types.ObjectId(restaurantId);
     const menuItems = await Restaurant.updateOne(
@@ -479,11 +480,11 @@ const editMenuItems = async (req, res) => {
       }
     );
 
-    return res.json({ status: '1', message: 'Menu updated successfully', updated: menuItems })
+    return res.json({ status: 1, message: 'Menu updated successfully', updated: menuItems })
 
   } catch (error) {
     console.log('editMenuItems:', error);
-    return res.status(500).json({ status: '0', message: "Can't Menu updated successfully" })
+    return res.status(500).json({ status: 0, message: "Can't Menu updated successfully" })
   }
 }
 

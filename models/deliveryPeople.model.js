@@ -30,6 +30,10 @@ const deliveryPeopleSchema = new mongoose.Schema(
             enum: [0, 1],
             default: 0
         },
+        fcmToken: {
+            type: String,
+            default: null
+        },
         latitude: {
             type: String
         },
