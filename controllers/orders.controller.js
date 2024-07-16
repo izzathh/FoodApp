@@ -87,8 +87,6 @@ const updateOrderStatus = async (req, res) => {
                 return rest;
             });
         }
-        console.log('updateStatus:', updateStatus);
-
         if (updateStatus) {
             if (status === 'confirmed') {
                 const admin = getFirebaseAdmin();
@@ -100,9 +98,8 @@ const updateOrderStatus = async (req, res) => {
                     const message = {
                         data: {
                             orderDetails: JSON.stringify(updateStatus),
-                            orderAccepted: false
+                            orderAccepted: '0'
                         },
-                        // token: 'c9lgd5VGRb-Nr9n-EMU8M0:APA91bEJm5RwPTfvsX760_gk5o2whTuav_zTZO29VftFifRAKN-45Bf4vipY1IQEyMjQ8RZlpsS1kq345JlQqtspk6PprhJwMzsEtPGtvZUFcYK2AiBtlfmfx0Hd4pEplf9drAbncK4Q'
                         token: getDeliveryPeoples.fcmToken
                     }
                     admin.messaging().send(message)
