@@ -64,7 +64,7 @@ const placeOrder = async (req, res) => {
 const getPendingOrders = async (req, res, next) => {
     try {
         let filter
-        if (req.query.forRestaurant == '1') {
+        if (!req.query.forRestaurant || req.query.forRestaurant == '1') {
             filter = {
                 restaurantId: mongoose.Types.ObjectId(req.query.id),
                 status: 'pending'
