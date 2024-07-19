@@ -11,7 +11,7 @@ function initializeWebSocketServer(server) {
     wss = new WebSocket.Server({ server })
     wss.on('connection', (ws) => {
         console.log('A user connected');
-        ws.send('Successfully connected to server');
+        ws.send(JSON.stringify({ type: 'connection', data: 'Successfully connected to server' }));
     })
     //WEBSOCKET FUNCTIONS -> STARTS
     checkOrderRequest(wss);

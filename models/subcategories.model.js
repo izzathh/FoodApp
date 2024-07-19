@@ -17,6 +17,9 @@ const SubCategorySchema = new mongoose.Schema(
             ref: 'Admin',
             required: [true, "Admin id is required"]
         },
+        categoryName: {
+            type: String, required: [true, "category name is required"]
+        },
         subCategoryName: {
             type: String, required: [true, "Sub-category name is required"]
         }

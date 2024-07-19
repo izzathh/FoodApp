@@ -64,13 +64,10 @@ const loginRateLimiter = rateLimit({
             message: 'Too many login attempts from this IP, please try again after 15 minutes'
         });
     },
-    // message: "Too many login attempts from this IP, please try again after 15 minutes"
 })
 
 const deliveryPeopleLogin = [
     loginRateLimiter,
-    body('phoneNumber').isMobilePhone().withMessage('Invalid mobile number'),
-    body('fcmToken').isString().withMessage("Invalid FCM token"),
     async (req, res, next) => {
         try {
             const errors = validationResult(req);

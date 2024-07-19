@@ -53,114 +53,6 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-const getAllUsers = async (req, res, next) => {
-  try {
-    const adminId = req.headers.adminid || "";
-    const users = await User.find({ createdAdminId: adminId }).select("-__v");
-    return res
-      .status(200)
-      .json({ message: "fetched all users", users: users || [] });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
-
-const editUser = async (req, res, next) => {
-  const {
-    userId,
-    email,
-    password,
-    branchCode,
-    googleMapLocation,
-    houseNumber,
-    streetAddress,
-    phoneNumber,
-    name,
-    max_daily_order
-  } = req.body;
-  try {
-    const user = await User.findById(userId).select("-__v");
-    const userByEmail = await User.findOne({ email: email });
-    const getBranchCode = await Admin.findOne({
-      branchCode: { $regex: new RegExp(`^${branchCode}$`, 'i') },
-    })
-
-    const adminId = req.headers.adminid || "";
-    // if (!getBranchCode) {
-    //   throw new NotFound("Branch Not Found!");
-    // }
-
-    if (!user) {
-      throw new NotFound("User Not Found!");
-    }
-
-    if (user.email !== email && userByEmail) {
-      throw new ValidationError("This email is already taken");
-    }
-
-    if (user.password === password) {
-      user.email = email;
-      user.name = name;
-      user.password = user.password;
-      user.createdAdminId = !getBranchCode ? adminId : getBranchCode._id;
-      user.branchCode = branchCode;
-      user.googleMapLocation = googleMapLocation;
-      user.houseNumber = houseNumber;
-      user.streetAddress = streetAddress;
-      user.phoneNumber = phoneNumber;
-      user.max_daily_order = max_daily_order;
-
-      const updatedUser = await user.save();
-      return res.status(200).json({
-        message: "user details updated sucessfully!",
-        user: updatedUser,
-      });
-    } else {
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, async (err, hash) => {
-          if (err) {
-            throw new Error(err);
-          }
-          user.email = email;
-          user.name = name;
-          user.password = hash;
-          user.createdAdminId = !getBranchCode ? adminId : getBranchCode._id;
-          user.branchCode = branchCode;
-          user.googleMapLocation = googleMapLocation;
-          user.houseNumber = houseNumber;
-          user.streetAddress = streetAddress;
-          user.phoneNumber = phoneNumber;
-          user.max_daily_order = max_daily_order;
-
-          const updatedUser = await user.save();
-          return res.status(200).json({
-            message: "user details updated sucessfully!",
-            user: updatedUser,
-          });
-        });
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
-
-const deleteUser = async (req, res, next) => {
-  const { userId } = req.params;
-  try {
-    const UserNeedsToBeDeleted = await User.findByIdAndDelete(userId);
-    return res.status(200).json({
-      message: "User Deleted Successfully!",
-      result: UserNeedsToBeDeleted,
-    });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
-
 function generateOtp() {
   const totalDigit = 6;
   const max = 999999;
@@ -194,44 +86,6 @@ const userLogin = async (req, res, next) => {
     })
   } catch (error) {
     console.log(error);
-    next(error);
-  }
-};
-
-const initUser = async (req, res, next) => {
-  try {
-    const adminId = req.headers.adminid ?? "";
-    const user = await User.findById(req.body.id).select("-password -__v");
-
-    return res.status(200).json({
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-};
-
-const forgotUserPassword = async (req, res, next) => {
-  try {
-    await verifyEmailAndSentOtp(req.body.email, false);
-
-    res.json({});
-  } catch (error) {
-    next(error);
-  }
-};
-
-const resetUserPassword = async (req, res, next) => {
-  try {
-    let user = await fetchUserFromEmailAndOtp(
-      req.body.email,
-      req.body.otp,
-      false
-    );
-    await updatePassword(user._id, req.body.password, false);
-    res.json({});
-  } catch (error) {
     next(error);
   }
 };
@@ -321,13 +175,7 @@ const changeUserDefaultAddress = async (req, res, next) => {
 
 module.exports = {
   registerUser,
-  getAllUsers,
-  editUser,
-  deleteUser,
   userLogin,
-  initUser,
-  forgotUserPassword,
-  resetUserPassword,
   updateUserAddress,
   getUserAddresses,
   generateOtp,

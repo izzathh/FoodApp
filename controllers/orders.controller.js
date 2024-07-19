@@ -61,22 +61,34 @@ const placeOrder = async (req, res) => {
     }
 }
 
-const getPendingOrders = async (req, res) => {
+const getPendingOrders = async (req, res, next) => {
     try {
-        const getPendingOrders = await Orders.find({ status: 'pending' })
+        let filter
+        if (req.query.forRestaurant == '1') {
+            filter = {
+                restaurantId: mongoose.Types.ObjectId(req.query.id),
+                status: 'pending'
+            }
+        } else {
+            filter = {
+                status: 'pending'
+            }
+        }
+        const getPendingOrders = await Orders.find(filter)
+
         return res.json({ status: 1, orders: getPendingOrders })
     } catch (error) {
         console.log('getPendingOrders:', error);
-        return res.status(500).json({ status: 0, message: error })
+        next(error);
     }
 }
 
 const updateOrderStatus = async (req, res) => {
     try {
-        const { orderId, status } = req.body;
+        const { orderId, status, restaurantId } = req.body;
 
         const updateStatus = await Orders.findOneAndUpdate(
-            { orderId },
+            { orderId, restaurantId },
             { $set: { status } },
             { new: true }
         )
@@ -87,10 +99,12 @@ const updateOrderStatus = async (req, res) => {
                 return rest;
             });
         }
+
         if (updateStatus) {
             if (status === 'confirmed') {
                 const admin = getFirebaseAdmin();
                 const getDeliveryPeoples = await DeliveryPeople.findOne({
+                    _id: "668e675dbb7e02cf2db711f0",
                     adminApproved: true,
                     shiftStatus: 1
                 })
@@ -140,20 +154,18 @@ const getRestaurantOrderList = async (req, res) => {
     }
 }
 
-const getAllOrders = async (req, res) => {
+const deleteOrder = async (req, res, next) => {
     try {
-        const { restaurantId } = req.query;
-
-        if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
-            return res.status(500).json({ status: 0, message: 'Please enter a valid restaurant id' })
+        const { restaurantId, orderId } = req.body;
+        const deleteOrder = await Orders.findOneAndDelete({ restaurantId, orderId })
+        console.log('deleteOrder:', deleteOrder);
+        if (deleteOrder) {
+            return res.status(200).json({ status: 1, message: 'Order deleted successfully' })
         }
-
-        const getOrders = await Orders.find({ restaurantId, status: 'confirmed' });
-
-        return res.status(200).json({ status: 1, totalOrders: getOrders.length, orders: getOrders })
+        return res.status(400).json({ status: 0, message: 'Cannot delete the order' })
     } catch (error) {
-        console.log('getAllOrders:', error);
-        return res.status(500).json({ status: 0, message: 'Error getting orders', error })
+        console.log('deleteOrder:', error);
+        next();
     }
 }
 
@@ -162,5 +174,5 @@ module.exports = {
     getPendingOrders,
     updateOrderStatus,
     getRestaurantOrderList,
-    getAllOrders
+    deleteOrder
 }

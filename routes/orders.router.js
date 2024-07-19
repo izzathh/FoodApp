@@ -10,7 +10,7 @@ const {
     getPendingOrders,
     updateOrderStatus,
     getRestaurantOrderList,
-    getAllOrders
+    deleteOrder
 } = require('../controllers/orders.controller')
 
 router.route('/place-order').post(upload.any(), placeOrder)
@@ -21,6 +21,6 @@ router.route('/update-order-status').post(updateOrderStatus)
 
 router.route('/get-restaurant-order-list').get(getRestaurantOrderList)
 
-router.route("/get-all-orders").get(getAllOrders);
+router.route('/delete-order').delete(deleteOrder)
 
 module.exports = router
