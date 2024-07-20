@@ -23,6 +23,15 @@ const OrdersSchema = new mongoose.Schema(
         address: {
             type: String, trim: true, required: [true, "Address is required"]
         },
+        deliveryBy: {
+            type: mongoose.Types.ObjectId,
+            ref: 'deliveryPeople',
+            default: null
+        },
+        deliveredAt: {
+            type: String,
+            default: null
+        },
         menucount: {
             type: Number, required: true
         },

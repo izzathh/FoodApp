@@ -483,11 +483,10 @@ const deleteCategory = async (req, res, next) => {
     const { categoryId, restaurantId } = req.body;
     await Category.findByIdAndDelete(categoryId);
     await SubCategory.findOneAndDelete({ categoryId });
-    const getRestaurantMenu = await Restaurant.updateOne(
+    await Restaurant.updateOne(
       { _id: mongoose.Types.ObjectId(restaurantId) },
       { $pull: { menu: { categoryId } } }
     );
-    console.log('getRestaurantMenu:', getRestaurantMenu);
     return res.status(200).json({ status: 1, message: 'Category deleted successfully' })
   } catch (error) {
     console.log('deleteCategory:', error);
@@ -531,6 +530,46 @@ const getAllSubCategories = async (req, res, next) => {
     next(error);
   }
 }
+
+const addNewSubCategory = async (req, res, next) => {
+  try {
+    const { restaurantId, subCategoryName, categoryName, categoryId, createdAdminId } = req.body
+
+    const addNewSubCategory = new SubCategory({
+      restaurantId,
+      createdAdminId,
+      categoryName,
+      subCategoryName,
+      categoryId
+    })
+
+    await addNewSubCategory.save();
+
+    return res.status(200).json({
+      status: 1,
+      message: `New sub category added`,
+      subCategory: addNewSubCategory
+    })
+  } catch (error) {
+    console.log('addNewSubCategory:', error);
+    next(error);
+  }
+}
+
+const deleteSubCategory = async (req, res, next) => {
+  try {
+    const { subCategoryId, restaurantId } = req.body;
+    await SubCategory.findByIdAndDelete(subCategoryId)
+    await Restaurant.updateOne(
+      { _id: mongoose.Types.ObjectId(restaurantId) },
+      { $pull: { menu: { subCategoryId } } }
+    )
+    return res.status(200).json({ status: 1, message: 'Sub category deleted successfully' })
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
 module.exports = {
   adminLogin,
   adminLogout,
@@ -550,5 +589,7 @@ module.exports = {
   getAllCategories,
   deleteCategory,
   updateCategory,
-  getAllSubCategories
+  getAllSubCategories,
+  addNewSubCategory,
+  deleteSubCategory
 };

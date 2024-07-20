@@ -7,6 +7,8 @@ const moment = require("moment")
 const { body, validationResult } = require('express-validator');
 const winston = require('winston');
 const rateLimit = require('express-rate-limit');
+const Orders = require('../models/orders.model')
+const Restaurant = require("../models/restaurants.model");
 
 const logger = winston.createLogger({
     level: 'info',
@@ -184,10 +186,49 @@ const shiftDpStatus = async (req, res, next) => {
     }
 }
 
+const getAllPendingOrders = async (req, res, next) => {
+    try {
+
+        const getPendingOrders = await Orders.find({ status: 'confirmed' })
+        let orders = []
+        for (const order of getPendingOrders) {
+            const restaurant = await Restaurant.findById(order.restaurantId)
+            orders.push({
+                order,
+                restaurant
+            })
+        }
+        return res.json({
+            status: 1,
+            message: 'Fetched pending orders',
+            data: orders
+        })
+    } catch (error) {
+        console.log('getPendingOrders:', error);
+        next(error);
+    }
+}
+
+const acceptOrderDelivery = async (req, res, next) => {
+    try {
+        const { _id, deliveryPeopleId } = req.body
+        await Orders.findByIdAndUpdate(_id, {
+            deliveryBy: deliveryPeopleId,
+            status: 'accepted'
+        })
+        return res.status(200).json({ status: 1, message: 'Order accepted' })
+    } catch (error) {
+        console.log('acceptOrderDelivery:', error);
+        next(error);
+    }
+}
+
 module.exports = {
     registerDeliveryPeople,
     deliveryPeopleLogin,
     getPendingRegistrations,
     updateDeliveryJobStatus,
-    shiftDpStatus
+    shiftDpStatus,
+    getAllPendingOrders,
+    acceptOrderDelivery
 }

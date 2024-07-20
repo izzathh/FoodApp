@@ -48,6 +48,39 @@ const validate = (method) => {
             body('categoryName')
                 .notEmpty().withMessage('Category name is required')
                 .isString().withMessage('Category name must be a string')
+        ],
+        "addSubCategory": [
+            body('restaurantId')
+                .notEmpty().withMessage('Restaurant id is required')
+                .isMongoId().withMessage('Invalid restaurant id'),
+            body('subCategoryName')
+                .notEmpty().withMessage('Sub category name is required')
+                .isString().withMessage('Sub category name must be a string'),
+            body('categoryName')
+                .notEmpty().withMessage('Category name is required')
+                .isString().withMessage('Category name must be a string'),
+            body('categoryId')
+                .notEmpty().withMessage('Category id is required')
+                .isMongoId().withMessage('Invalid category id'),
+            body('createdAdminId')
+                .notEmpty().withMessage('Created admin id is required')
+                .isMongoId().withMessage('Invalid admin id'),
+        ],
+        "deleteSubCategory": [
+            body('restaurantId')
+                .notEmpty().withMessage('Restaurant id is required')
+                .isMongoId().withMessage('Invalid restaurant id'),
+            body('subCategoryId')
+                .notEmpty().withMessage('Sub category id is required')
+                .isMongoId().withMessage('Invalid sub category id')
+        ],
+        "acceptOrder": [
+            body('_id')
+                .notEmpty().withMessage('Unique order id is required')
+                .isMongoId().withMessage('Invalid order id'),
+            body('deliveryPeopleId')
+                .notEmpty().withMessage('Delivery people id is required')
+                .isMongoId().withMessage('Invalid delivery people id'),
         ]
     }
     return options[method] || []

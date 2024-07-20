@@ -37,7 +37,7 @@ const placeOrder = async (req, res) => {
             restaurantId,
             userId,
             orderId: orderId || `FA-${currentDate.format('YYYYMMDD')}-1`,
-            menu: typeof menu === 'object' ? menu : JSON.parse(menu),
+            menu: typeof menu == 'object' ? menu : JSON.parse(menu),
             status,
             address,
             menucount,
@@ -76,7 +76,11 @@ const getPendingOrders = async (req, res, next) => {
         }
         const getPendingOrders = await Orders.find(filter)
 
-        return res.json({ status: 1, orders: getPendingOrders })
+        return res.json({
+            status: 1,
+            message: 'Fetched pending orders',
+            orders: getPendingOrders
+        })
     } catch (error) {
         console.log('getPendingOrders:', error);
         next(error);
