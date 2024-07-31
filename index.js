@@ -11,11 +11,13 @@ const orderRoutes = require("./routes/orders.router");
 const deliveryPeopleRoutes = require("./routes/deliveryPeople.router")
 const adminRoutes = require("./routes/admin.router");
 const handleErrors = require("./middlewares/handleErrors");
+const { authenticationToken } = require("./middlewares/authCheck");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const { initializeWebSocketServer } = require("./websocket");
 const Admins = require('./models/admin.model');
+const { firestore } = require('./firebase');
+const { listenForFirebase } = require("./firebase/snapshots");
 
 initializeWebSocketServer(server);
 
@@ -39,6 +41,7 @@ app.use(express.json());
 app.use(mongoSanitize({ dryRun: true }));
 
 connectToDB();
+listenForFirebase();
 
 app.use((req, res, next) => {
   console.log(req.url);
@@ -46,21 +49,14 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/v1/home", (req, res) => {
-  res.send("Hello 👋🏻, I am from MyStore backend!");
+  res.send("Hello 👋🏻, I am from food app backend!");
 });
 
-const authenticationToken = (req, res, next) => {
-  const token = req.cookies['auth_token'];
-  if (!token) return res.sendStatus(401);
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log('err:', err);
-      return res.sendStatus(403);
-    }
-    req.user = user;
-    next();
-  });
-};
+app.get('/api/data', async (req, res) => {
+  const snapshot = await firestore.collection('order-delivery-status').get();
+  const data = snapshot.docs.map(doc => doc.data());
+  res.send(data);
+});
 
 app.get("/api/v1/admin-actions/check-auth", authenticationToken, async (req, res) => {
   const checkAdmin = await Admins.findById(req.user.id);
@@ -80,7 +76,6 @@ app.use("/api/v1/dp-actions", deliveryPeopleRoutes);
 app.use(handleErrors);
 
 const PORT = process.env.PORT || 4000;
-
 
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

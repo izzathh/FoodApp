@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "my-store-backend",
+    "name": "food-app-backend",
     "builds": [
         {
             "src": "index.js",

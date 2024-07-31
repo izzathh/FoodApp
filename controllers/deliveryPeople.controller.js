@@ -223,6 +223,34 @@ const acceptOrderDelivery = async (req, res, next) => {
     }
 }
 
+const getAcceptedOrderDetails = async (req, res, next) => {
+    const { id, deliveryBy } = req.params;
+    try {
+        const getOrder = await Orders.findOne({
+            _id: id,
+            deliveryBy
+        })
+        if (!getOrder)
+            return res.status(404).json({ status: 0, message: "Order not found" })
+        const getUser = await User.findById(getOrder.userId)
+        const getRestaurant = await Restaurant.findById(getOrder.restaurantId)
+        getRestaurant.menu = []
+        console.log('getUser:', getUser);
+        return res.status(200).json({
+            status: 1,
+            data: {
+                order: getOrder,
+                restaurant: getRestaurant,
+                customer: getUser
+            },
+            message: "fetched accepted order details"
+        })
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 module.exports = {
     registerDeliveryPeople,
     deliveryPeopleLogin,
@@ -230,5 +258,6 @@ module.exports = {
     updateDeliveryJobStatus,
     shiftDpStatus,
     getAllPendingOrders,
-    acceptOrderDelivery
+    acceptOrderDelivery,
+    getAcceptedOrderDetails
 }

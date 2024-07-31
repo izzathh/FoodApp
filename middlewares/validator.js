@@ -81,6 +81,14 @@ const validate = (method) => {
             body('deliveryPeopleId')
                 .notEmpty().withMessage('Delivery people id is required')
                 .isMongoId().withMessage('Invalid delivery people id'),
+        ],
+        "getAcceptedOrder": [
+            param('id')
+                .notEmpty().withMessage("order's unique id is required")
+                .isMongoId().withMessage('Invalid order id'),
+            param('deliveryBy')
+                .notEmpty().withMessage('Delivery people id is required')
+                .isMongoId().withMessage('Invalid delivery people id')
         ]
     }
     return options[method] || []

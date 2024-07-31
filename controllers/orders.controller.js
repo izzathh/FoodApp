@@ -150,7 +150,7 @@ const getRestaurantOrderList = async (req, res) => {
         if (!restaurantId || !mongoose.Types.ObjectId.isValid(restaurantId)) {
             return res.status(400).json({ status: 0, message: 'Please enter a valid restaurant ID' })
         }
-        const getRestaurantOrders = await Orders.find({ restaurantId, status: 'confirmed' })
+        const getRestaurantOrders = await Orders.find({ restaurantId, status: { $ne: 'pending' } })
         console.log('getRestaurantOrders:', getRestaurantOrders);
         return res.json({ status: 1, orders: getRestaurantOrders })
     } catch (error) {
@@ -172,6 +172,24 @@ const deleteOrder = async (req, res, next) => {
         next();
     }
 }
+
+// const getUserOrders = async (req, res, next) => {
+//     const { userId } = req.params
+//     try {
+//         const getOrders = await Orders.find({ userId });
+//         const cancelledAndDelivered = 
+//         return res.status(200).json({
+//             status: 1,
+//             message: 'Orders fetched',
+//             data: {
+//                 orders: getOrders
+//             }
+//         })
+//     } catch (error) {
+//         console.log(error);
+//         next(error);
+//     }
+// }
 
 module.exports = {
     placeOrder,
