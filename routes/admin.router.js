@@ -21,7 +21,9 @@ const {
   updateCategory,
   getAllSubCategories,
   addNewSubCategory,
-  deleteSubCategory
+  deleteSubCategory,
+  updateSubCategory,
+  addNewDishes
 } = require("../controllers/admin.controller");
 const multer = require('multer');
 const { validate, handleValidation } = require("../middlewares/validator");
@@ -94,5 +96,15 @@ router.route("/delete-sub-category")
   .all(validate('deleteSubCategory'))
   .all(handleValidation)
   .delete(deleteSubCategory);
+
+router.route("/update-sub-category")
+  .all(validate('updateSubCategory'))
+  .all(handleValidation)
+  .post(updateSubCategory)
+
+router.route("/add-new-dishes")
+  .all(upload.array('itemData'), validate('addNewDishes'))
+  .all(handleValidation)
+  .post(addNewDishes)
 
 module.exports = router;

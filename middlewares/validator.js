@@ -89,6 +89,19 @@ const validate = (method) => {
             param('deliveryBy')
                 .notEmpty().withMessage('Delivery people id is required')
                 .isMongoId().withMessage('Invalid delivery people id')
+        ],
+        "getUserOrders": [
+            param('userId')
+                .notEmpty().withMessage('User id is required')
+                .isMongoId().withMessage('Invalid user id')
+        ],
+        "addNewDishes": [
+            body('restaurantId')
+                .notEmpty().withMessage('Restaurant id is required')
+                .isMongoId().withMessage('Invalid restaurant id'),
+            body('itemData')
+                .notEmpty().withMessage('Item data is required')
+                .isArray().withMessage('Item data should be an array')
         ]
     }
     return options[method] || []

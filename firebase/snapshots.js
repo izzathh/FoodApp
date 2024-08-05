@@ -6,7 +6,7 @@ async function listenForFirebase() {
         firestore.collection('order-delivery-status').onSnapshot(snapshot => {
             snapshot.docChanges().forEach(async (change) => {
                 if (change.type === 'added') {
-                    console.log('New data: ', change.doc.data());
+                    console.log('New order status: ', change.doc.data());
                     const { id, status } = change.doc.data()
                     await Orders.findByIdAndUpdate(id, {
                         $set: { status }
@@ -14,7 +14,7 @@ async function listenForFirebase() {
                     console.log('firebase data added');
                 }
                 if (change.type === 'modified') {
-                    console.log('Modified data: ', change.doc.data());
+                    console.log('Modified order status: ', change.doc.data());
                     const { id, status } = change.doc.data()
                     await Orders.findByIdAndUpdate(id, {
                         $set: { status }
@@ -22,7 +22,14 @@ async function listenForFirebase() {
                     console.log('firebase data updated');
                 }
                 if (change.type === 'removed') {
-                    console.log('Removed data: ', change.doc.data());
+                    console.log('Removed order status: ', change.doc.data());
+                    const { id, status } = change.doc.data()
+                    if (status === 'order delivered') {
+                        await Orders.findByIdAndUpdate(id, {
+                            $set: { status: "payment received" }
+                        })
+                        console.log('payment received from the order');
+                    }
                 }
             });
         });

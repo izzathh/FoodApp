@@ -6,7 +6,7 @@ const { getWebSocketServer } = require('../websocket');
 const { getFirebaseAdmin } = require('../firebase');
 const DeliveryPeople = require('../models/deliveryPeople.model');
 
-const placeOrder = async (req, res) => {
+const placeOrder = async (req, res, next) => {
     try {
         const {
             restaurantId,
@@ -57,7 +57,7 @@ const placeOrder = async (req, res) => {
 
     } catch (error) {
         console.log('error:', error);
-        return res.status(500).json({ status: 0, message: error })
+        next(error);
     }
 }
 
@@ -173,28 +173,29 @@ const deleteOrder = async (req, res, next) => {
     }
 }
 
-// const getUserOrders = async (req, res, next) => {
-//     const { userId } = req.params
-//     try {
-//         const getOrders = await Orders.find({ userId });
-//         const cancelledAndDelivered = 
-//         return res.status(200).json({
-//             status: 1,
-//             message: 'Orders fetched',
-//             data: {
-//                 orders: getOrders
-//             }
-//         })
-//     } catch (error) {
-//         console.log(error);
-//         next(error);
-//     }
-// }
+const getUserOrders = async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const getOrders = await Orders.find({ userId });
+
+        return res.status(200).json({
+            status: 1,
+            message: 'Orders fetched',
+            data: {
+                allOrders: getOrders
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
 
 module.exports = {
     placeOrder,
     getPendingOrders,
     updateOrderStatus,
     getRestaurantOrderList,
-    deleteOrder
+    deleteOrder,
+    getUserOrders
 }

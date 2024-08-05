@@ -219,14 +219,18 @@ const addMenuItems = async (req, res) => {
       price,
       address,
       veg,
+      categoryId,
+      subCategoryId,
+      delivery,
       restaurantId } = req.body;
-    console.log('offer:', offer);
     const image = req.file
 
     const updatedRestaurant = await Restaurant.findById(restaurantId);
     const itemId = updatedRestaurant.menu.length + 1
     updatedRestaurant.menu.push({
       id: itemId,
+      categoryId,
+      subCategoryId,
       itemName,
       description,
       fullDescription,
@@ -234,8 +238,8 @@ const addMenuItems = async (req, res) => {
       price,
       address,
       rating: '0.0',
-      delivery: true,
-      veg,
+      delivery: Boolean(delivery),
+      veg: Boolean(veg),
       image: 'data:image/png;base64,' + image.buffer.toString('base64')
     })
     await updatedRestaurant.save();
@@ -570,6 +574,46 @@ const deleteSubCategory = async (req, res, next) => {
     next(error);
   }
 }
+
+const updateSubCategory = async (req, res, next) => {
+  const { subCategoryId, categoryId, subCategory, category } = req.body
+  try {
+    let update = {}
+    if (category) {
+      update.categoryId = categoryId
+      update.categoryName = category
+    }
+    if (subCategory) {
+      update.subCategoryName = subCategory
+    }
+
+    await SubCategory.findByIdAndUpdate(subCategoryId, {
+      $set: update
+    })
+
+    return res.status(200).json({ status: 1, message: 'sub category updated' })
+
+  } catch (error) {
+    console.log(error);
+    next(error)
+  }
+}
+
+const addNewDishes = async (req, res, next) => {
+  const { restaurantId, itemData } = req.body
+  try {
+    const getMenuList = await Restaurant.findById(restaurantId).select('menu');
+    if (!getMenuList)
+      throw new NotFound('Restaurant not found');
+    const addedMenus = getMenuList.push(itemData).flat()
+    await addedMenus.save();
+    return res.status(200).json({ status: 1, message: 'New dish added', dishes: addedMenus })
+  } catch (error) {
+    console.log(error);
+    next(error)
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -591,5 +635,7 @@ module.exports = {
   updateCategory,
   getAllSubCategories,
   addNewSubCategory,
-  deleteSubCategory
+  deleteSubCategory,
+  updateSubCategory,
+  addNewDishes
 };
