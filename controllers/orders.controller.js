@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Orders = require('../models/orders.model')
+const Restaurant = require('../models/restaurants.model')
 const moment = require("moment");
 const WebSocket = require('ws');
 const { getWebSocketServer } = require('../websocket');
@@ -96,12 +97,14 @@ const updateOrderStatus = async (req, res) => {
             { $set: { status } },
             { new: true }
         )
-
+        let modifiedMenu
+        let originalMenu
         if (updateStatus && updateStatus.menu && Array.isArray(updateStatus.menu)) {
-            updateStatus.menu = updateStatus.menu.map(item => {
+            modifiedMenu = updateStatus.menu.map(item => {
                 const { image, ...rest } = item;
                 return rest;
             });
+            originalMenu = updateStatus.menu
         }
 
         if (updateStatus) {
@@ -115,7 +118,7 @@ const updateOrderStatus = async (req, res) => {
                 if (getDeliveryPeoples && getDeliveryPeoples.fcmToken) {
                     const message = {
                         data: {
-                            orderDetails: JSON.stringify(updateStatus),
+                            orderDetails: JSON.stringify({ ...updateStatus._doc, menu: updateStatus.menu = modifiedMenu }),
                             orderAccepted: '0'
                         },
                         token: getDeliveryPeoples.fcmToken
@@ -132,10 +135,17 @@ const updateOrderStatus = async (req, res) => {
             const wss = getWebSocketServer();
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ type: status, data: updateStatus }));
+                    client.send(JSON.stringify({
+                        type: status,
+                        data: { ...updateStatus._doc, menu: updateStatus.menu = modifiedMenu }
+                    }));
                 }
             });
-            return res.json({ status: 1, message: 'Order status changed', updateStatus })
+            return res.json({
+                status: 1,
+                message: 'Order status changed',
+                updateStatus: updateStatus._doc
+            })
         }
         return res.status(500).json({ status: 0, message: 'Cannot update order status' })
     } catch (error) {
@@ -178,11 +188,22 @@ const getUserOrders = async (req, res, next) => {
     try {
         const getOrders = await Orders.find({ userId });
 
+        const modifiedOrders = await Promise.all(getOrders.map(async (order) => {
+            const getRestaurant = await Restaurant
+                .findById(order.restaurantId)
+                .select('image restaurantName');
+            return {
+                ...order._doc,
+                restaurantName: getRestaurant.restaurantName,
+                restaurantImage: getRestaurant.image
+            }
+        }))
+
         return res.status(200).json({
             status: 1,
             message: 'Orders fetched',
             data: {
-                allOrders: getOrders
+                allOrders: modifiedOrders
             }
         })
     } catch (error) {
