@@ -18,6 +18,7 @@ const { initializeWebSocketServer } = require("./websocket");
 const Admins = require('./models/admin.model');
 const { firestore } = require('./firebase');
 const { listenForFirebase } = require("./firebase/snapshots");
+const { log } = require("console");
 
 initializeWebSocketServer(server);
 
@@ -42,6 +43,33 @@ app.use(mongoSanitize({ dryRun: true }));
 
 connectToDB();
 listenForFirebase();
+
+
+// function Person(first, last) {
+//   this.first = first
+//   this.last = last
+// }
+
+// Person.prototype.fullName = function () {
+//   return `My name is ${this.first} ${this.last} `
+// }
+
+// const Person1 = new Person('Mohammed', 'Izzath')
+
+// console.log(Person1.fullName());
+
+
+// const concatenateIt = (x) => {
+//   return (y) => {
+//     return x + y
+//   }
+// }
+
+// const concat = concatenateIt('izz');
+// console.log(concat('ath'));
+
+
+
 
 app.use((req, res, next) => {
   console.log(req.url);

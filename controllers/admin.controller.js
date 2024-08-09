@@ -221,6 +221,8 @@ const addMenuItems = async (req, res) => {
       veg,
       categoryId,
       subCategoryId,
+      categoryName,
+      subCategoryName,
       delivery,
       restaurantId } = req.body;
     const image = req.file
@@ -229,8 +231,8 @@ const addMenuItems = async (req, res) => {
     const itemId = updatedRestaurant.menu.length + 1
     updatedRestaurant.menu.push({
       id: itemId,
-      categoryId,
-      subCategoryId,
+      categoryId: mongoose.Types.ObjectId(categoryId),
+      subCategoryId: mongoose.Types.ObjectId(subCategoryId),
       itemName,
       description,
       fullDescription,
@@ -238,16 +240,27 @@ const addMenuItems = async (req, res) => {
       price,
       address,
       rating: '0.0',
-      delivery: Boolean(delivery),
-      veg: Boolean(veg),
+      delivery: delivery == 'true',
+      veg: veg == 'true',
       image: 'data:image/png;base64,' + image.buffer.toString('base64')
     })
-    await updatedRestaurant.save();
+    const updatedRes = await updatedRestaurant.save();
+
+    const newMenu = updatedRes.menu.map(dish => {
+      if (dish.id === itemId)
+        return {
+          ...dish,
+          categoryName,
+          subCategoryName
+        }
+      else
+        return dish
+    })
 
     return res.json({
       status: 1,
       message: 'Item added successfully',
-      updatedRestaurant
+      newMenu: newMenu.filter(m => m.id === itemId)[0]
     })
 
   } catch (error) {
@@ -272,31 +285,59 @@ const editMenuItems = async (req, res) => {
       veg,
       image,
       restaurantId,
-      menuId
+      menuId,
+      categoryId,
+      subCategoryId,
+      delivery
     } = req.body;
     if (!isValidObjectId(restaurantId)) {
       return res.status(400).json({ status: 0, message: 'Invalid restaurant ID' });
     }
+
     const restaurantObjectId = mongoose.Types.ObjectId(restaurantId);
-    const menuItems = await Restaurant.updateOne(
+    const menuItems = await Restaurant.findOneAndUpdate(
       {
         _id: restaurantObjectId,
         'menu.id': Number(menuId)
       },
       {
         $set: {
+          'menu.$.categoryId': categoryId,
+          'menu.$.subCategoryId': subCategoryId,
           'menu.$.itemName': itemName,
           'menu.$.description': description,
           'menu.$.fullDescription': fullDescription,
           'menu.$.offer': offer,
           'menu.$.price': price,
-          'menu.$.veg': veg,
+          'menu.$.veg': veg == 'true',
+          'menu.$.delivery': delivery == 'true',
           'menu.$.image': image
         }
+      },
+      {
+        new: true
       }
     );
 
-    return res.json({ status: 1, message: 'Menu updated successfully', updated: menuItems })
+    const categoryName = await Category.findById(categoryId).select('categoryName')
+    const subCategoryName = await SubCategory.findById(subCategoryId).select('subCategoryName')
+
+    const updatedMenu = menuItems.menu.map(menu => {
+      if (menu.id == menuId) {
+        return {
+          ...menu,
+          categoryName: categoryName.categoryName,
+          subCategoryName: subCategoryName.subCategoryName
+        }
+      }
+      return menu
+    })
+
+    return res.json({
+      status: 1,
+      message: 'Menu updated successfully',
+      updated: updatedMenu.filter(m => m.id == menuId)[0]
+    })
 
   } catch (error) {
     console.log('editMenuItems:', error);
@@ -307,9 +348,10 @@ const editMenuItems = async (req, res) => {
 const deleteMenuItem = async (req, res) => {
   try {
     const { restaurantId, menuId } = req.body;
-    const result = await Restaurant.updateOne(
+    const result = await Restaurant.findOneAndUpdate(
       { _id: mongoose.Types.ObjectId(restaurantId) },
-      { $pull: { menu: { id: menuId } } }
+      { $pull: { menu: { id: menuId } } },
+      { new: true }
     )
     return res.json({ status: 1, message: 'Menu item deleted successfully', result })
   } catch (error) {
@@ -432,10 +474,24 @@ const getRestaurantDishes = [
       if (!getDishes) {
         throw new NotFound('Restaurant not found')
       }
+
+      const addedCatSubCat = await Promise.all(getDishes.menu.map(async (dish) => {
+        const categoryName = await Category.findById(dish.categoryId).select('categoryName')
+        const subCategoryName = await SubCategory.findById(dish.subCategoryId).select('subCategoryName')
+        let updatedData = []
+        const addCatSub = {
+          ...dish,
+          categoryName: categoryName.categoryName,
+          subCategoryName: subCategoryName.subCategoryName
+        }
+        updatedData.push(addCatSub)
+        return updatedData
+      },));
+
       return res.status(200).json({
         status: 1,
         message: 'Dishes fetched successfully',
-        dishes: getDishes
+        dishes: addedCatSubCat.flat()
       })
     } catch (error) {
       console.log('getRestaurantDishes:', error);
@@ -486,7 +542,7 @@ const deleteCategory = async (req, res, next) => {
   try {
     const { categoryId, restaurantId } = req.body;
     await Category.findByIdAndDelete(categoryId);
-    await SubCategory.findOneAndDelete({ categoryId });
+    await SubCategory.deleteMany({ categoryId });
     await Restaurant.updateOne(
       { _id: mongoose.Types.ObjectId(restaurantId) },
       { $pull: { menu: { categoryId } } }
@@ -599,20 +655,23 @@ const updateSubCategory = async (req, res, next) => {
   }
 }
 
-const addNewDishes = async (req, res, next) => {
-  const { restaurantId, itemData } = req.body
-  try {
-    const getMenuList = await Restaurant.findById(restaurantId).select('menu');
-    if (!getMenuList)
-      throw new NotFound('Restaurant not found');
-    const addedMenus = getMenuList.push(itemData).flat()
-    await addedMenus.save();
-    return res.status(200).json({ status: 1, message: 'New dish added', dishes: addedMenus })
-  } catch (error) {
-    console.log(error);
-    next(error)
-  }
-}
+// const addNewDishes = async (req, res, next) => {
+//   const { restaurantId, itemData } = req.body
+//   try {
+//     console.log('itemData:', itemData);
+//     itemData.categoryId = mongoose.Types.ObjectId(itemData.categoryId)
+//     itemData.subCategoryId = mongoose.Types.ObjectId(itemData.subCategoryId)
+//     const getMenuList = await Restaurant.findById(restaurantId).select('menu');
+//     if (!getMenuList)
+//       throw new NotFound('Restaurant not found');
+//     const addedMenus = getMenuList.push(itemData).flat()
+//     await addedMenus.save();
+//     return res.status(200).json({ status: 1, message: 'New dish added', dishes: addedMenus })
+//   } catch (error) {
+//     console.log(error);
+//     next(error)
+//   }
+// }
 
 module.exports = {
   adminLogin,
@@ -636,6 +695,6 @@ module.exports = {
   getAllSubCategories,
   addNewSubCategory,
   deleteSubCategory,
-  updateSubCategory,
-  addNewDishes
+  updateSubCategory
+  // addNewDishes
 };
