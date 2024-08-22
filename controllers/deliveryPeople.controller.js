@@ -235,7 +235,6 @@ const getAcceptedOrderDetails = async (req, res, next) => {
         const getUser = await User.findById(getOrder.userId)
         const getRestaurant = await Restaurant.findById(getOrder.restaurantId)
         getRestaurant.menu = []
-        console.log('getUser:', getUser);
         return res.status(200).json({
             status: 1,
             data: {

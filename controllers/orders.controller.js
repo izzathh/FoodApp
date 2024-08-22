@@ -90,10 +90,10 @@ const getPendingOrders = async (req, res, next) => {
 
 const updateOrderStatus = async (req, res) => {
     try {
-        const { orderId, status, restaurantId } = req.body;
+        const { orderUniqueId, status, restaurantId } = req.body;
 
         const updateStatus = await Orders.findOneAndUpdate(
-            { orderId, restaurantId },
+            { _id: orderUniqueId, restaurantId },
             { $set: { status } },
             { new: true }
         )

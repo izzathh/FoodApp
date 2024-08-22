@@ -1901,3 +1901,620 @@ MongoDB connected on 127.0.0.1
 /admin-actions/check-auth
 /admin-actions/check-auth
 /admin-actions/check-auth
+Server started on port 8080
+New order status:  {
+  latitude: 12.9197273,
+  id: '66bc449ee5ecb789f4c4e8ac',
+  longitude: 80.1889199,
+  status: 'Payment received'
+}
+New order status:  {
+  id: '66bc5758062ce3554c9952f6',
+  latitude: 12.9197246,
+  status: 'Payment received',
+  longitude: 80.1889209
+}
+New order status:  {
+  status: 'Payment received',
+  longitude: 80.188918,
+  id: '66bc593f062ce3554c9952f9',
+  latitude: 12.9197181
+}
+New order status:  {
+  id: '66bc5c66062ce3554c9952fc',
+  longitude: 80.1889184,
+  latitude: 12.9197145,
+  status: 'Payment received'
+}
+New order status:  {
+  id: '66bc5d65062ce3554c9952ff',
+  longitude: 80.1889193,
+  latitude: 12.9196155,
+  status: 'order picked up'
+}
+New order status:  {
+  id: '66bf046254d5f34c3c178298',
+  status: '',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  latitude: '',
+  id: '66bf1fb754d5f34c3c1782cf',
+  status: '',
+  longitude: ''
+}
+New order status:  {
+  latitude: '',
+  longitude: '',
+  status: '',
+  id: '66bf233b54d5f34c3c1782d8'
+}
+New order status:  {
+  status: '',
+  id: '66bf23eb54d5f34c3c1782db',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  longitude: '',
+  id: '66bf2ae654d5f34c3c1782f1',
+  status: '',
+  latitude: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+New Order Request: {
+  _id: new ObjectId("66bf303454d5f34c3c1782fa"),
+  restaurantId: new ObjectId("668e5f3f04c72416f4eda096"),
+  userId: new ObjectId("6673cd14491f2d9c834a1468"),
+  orderId: 'FA-20240816-27',
+  menu: [
+    {
+      id: 5,
+      itemName: 'Mutton briyani',
+      image: 'data:image/png;base64,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ICB4bWxuczpleGlmRVg9Imh0dHA6Ly9jaXBhLmpwL2V4aWYvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgeG1sbnM6Y3JzPSJodHRwOi8vbnMuYWRvYmUuY29tL2NhbWVyYS1yYXctc2V0dGluZ3MvMS4wLyIKICAgYXV4OlNlcmlhbE51bWJlcj0iWEVSMTgwMzIyMDEyNyIKICAgYXV4OkxlbnM9IkxVTUlYIEcgMjUvRjEuNyIKICAgYXV4OkxlbnNTZXJpYWxOdW1iZXI9IjA4RFg0MjU4Njc2QiIKICAgZXhpZkVYOkxlbnNNb2RlbD0iTFVNSVggRyAyNS9GMS43IgogICB4bXA6TW9kaWZ5RGF0ZT0iMjAyMi0wNS0wOFQxMjozNjoxMiswNTozMCIKICAgeG1wOkNyZWF0ZURhdGU9IjIwMjItMDUtMDhUMTI6NTY6MTYuMzUyIgogICB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBMaWdodHJvb20gQ2xhc3NpYyA4LjIuMSAoV2luZG93cykiCiAgIHhtcDpNZXRhZGF0YURhdGU9IjIwMjItMDUtMDhUMTI6MzY6MTIrMDU6MzAiCiAgIHBob3Rvc2hvcDpEYXRlQ3JlYXRlZD0iMjAyMi0wNS0wOFQxMjo1NjoxNi4zNTIiCiAgIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTczMzJhM2YtNjIyMC02YjRkLThmODEtZWU2MTc1MDY2Y2Y5IgogICB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9IkU1NzlFNkJDOUFEODZFQjdFOTFFNTRGNDUyOTlBMEIwIgogICB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE3MzMyYTNmLTYyMjAtNmI0ZC04ZjgxLWVlNjE3NTA2NmNmOSIKICAgZGM6Zm9ybWF0PSJpbWFnZS9qcGVnIgogICBjcnM6VmVyc2lvbj0iMTEuMi4xIgogICBjcnM6UHJvY2Vzc1ZlcnNpb249IjExLjAiCiAgIGNyczpXaGl0ZUJhbGFuY2U9IkN1c3RvbSIKICAgY3JzOlRlbXBlcmF0dXJlPSIzOTUwIgogICBjcnM6VGludD0iKzI2IgogICBjcnM6U2F0dXJhdGlvbj0iMCIKICAgY3JzOlNoYXJwbmVzcz0iNDAiCiAgIGNyczpMdW1pbmFuY2VTbW9vdGhpbmc9IjAiCiAgIGNyczpDb2xvck5vaXNlUmVkdWN0aW9uPSIyNSIKICAgY3JzOlZpZ25ldHRlQW1vdW50PSIwIgogICBjcnM6U2hhZG93VGludD0iMCIKICAgY3JzOlJlZEh1ZT0iMCIKICAgY3JzOlJlZFNhdHVyYXRpb249IjAiCiAgIGNyczpHcmVlbkh1ZT0iMCIKICAgY3JzOkdyZWVuU2F0dXJhdGlvbj0iMCIKICAgY3JzOkJsdWVIdWU9IjAiCiAgIGNyczpCbHVlU2F0dXJhdGlvbj0iMCIKICAgY3JzOlZpYnJhbmNlPSIwIgogICBjcnM6SHVlQWRqdXN0bWVudFJlZD0iMCIKICAgY3JzOkh1ZUFkanVzdG1lbnRPcmFuZ2U9IjAiCiAgIGNyczpIdWVBZGp1c3RtZW50WWVsbG93PSIwIgogICBjcnM6SHVlQWRqdXN0bWVudEdyZWVuPSIwIgogICBjcnM6SHVlQWRqdXN0bWVudEFxdWE9IjAiCiAgIGNyczpIdWVBZGp1c3RtZW50Qmx1ZT0iMCIKICAgY3JzOkh1ZUFkanVzdG1lbnRQdXJwbGU9IjAiCiAgIGNyczpIdWVBZGp1c3RtZW50TWFnZW50YT0iMCIKICAgY3JzOlNhdHVyYXRpb25BZGp1c3RtZW50UmVkPSIwIgogICBjcnM6U2F0dXJhdGlvbkFkanVzdG1lbnRPcmFuZ2U9IjAiCiAgIGNyczpTYXR1cmF0aW9uQWRqdXN0bWVudFllbGxvdz0iMCIKICAgY3JzOlNhdHVyYXRpb25BZGp1c3RtZW50R3JlZW49IjAiCiAgIGNyczpTYXR1cmF0aW9uQWRqdXN0bWVudEFxdWE9IjAiCiAgIGNyczpTYXR1cmF0aW9uQWRqdXN0bWVudEJsdWU9IjAiCiAgIGNyczpTYXR1cmF0aW9uQWRqdXN0bWVudFB1cnBsZT0iMCIKICAgY3JzOlNhdHVyYXRpb25BZGp1c3RtZW50TWFnZW50YT0iMCIKICAgY3JzOkx1bWluYW5jZUFkanVzdG1lbnRSZWQ9IjAiCiAgIGNyczpMdW1pbmFuY2VBZGp1c3RtZW50T3JhbmdlPSIwIgogICBjcnM6THVtaW5hbmNlQWRqdXN0bWVudFllbGxvdz0iMCIKICAgY3JzOkx1bWluYW5jZUFkanVzdG1lbnRHcmVlbj0iMCIKICAgY3JzOkx1bWluYW5jZUFkanVzdG1lbnRBcXVhPSIwIgogICBjcnM6THVtaW5hbmNlQWRqdXN0bWVudEJsdWU9IjAiCiAgIGNyczpMdW1pbmFuY2VBZGp1c3RtZW50UHVycGxlPSIwIgogICBjcnM6THVtaW5hbmNlQWRqdXN0bWVudE1hZ2VudGE9IjAiCiAgIGNyczpTcGxpdFRvbmluZ1NoYWRvd0h1ZT0iMCIKICAgY3JzOlNwbGl0VG9uaW5nU2hhZG93U2F0dXJhdGlvbj0iMCIKICAgY3JzOlNwbGl0VG9uaW5nSGlnaGxpZ2h0SHVlPSIwIgogICBjcnM6U3BsaXRUb25pbmdIaWdobGlnaHRTYXR1cmF0aW9uPSIwIgogICBjcnM6U3BsaXRUb25pbmdCYWxhbmNlPSIwIgogICBjcnM6UGFyYW1ldHJpY1NoYWRvd3M9IjAiCiAgIGNyczpQYXJhbWV0cmljRGFya3M9IjAiCiAgIGNyczpQYXJhbWV0cmljTGlnaHRzPSIwIgogICBjcnM6UGFyYW1ldHJpY0hpZ2hsaWdodHM9IjAiCiAgIGNyczpQYXJhbWV0cmljU2hhZG93U3BsaXQ9IjI1IgogICBjcnM6UGFyYW1ldHJpY01pZHRvbmVTcGxpdD0iNTAiCiAgIGNyczpQYXJhbWV0cmljSGlnaGxpZ2h0U3BsaXQ9Ijc1IgogICBjcnM6U2hhcnBlblJhZGl1cz0iKzEuMCIKICAgY3JzOlNoYXJwZW5EZXRhaWw9IjI1IgogICBjcnM6U2hhcnBlbkVkZ2VNYXNraW5nPSIwIgogICBjcnM6UG9zdENyb3BWaWduZXR0ZUFtb3VudD0iMCIKICAgY3JzOkdyYWluQW1vdW50PSIwIgogICBjcnM6Q29sb3JOb2lzZVJlZHVjdGlvbkRldGFpbD0iNTAiCiAgIGNyczpDb2xvck5vaXNlUmVkdWN0aW9uU21vb3RobmVzcz0iNTAiCiAgIGNyczpMZW5zUHJvZmlsZUVuYWJsZT0iMCIKICAgY3JzOkxlbn'... 118602 more characters,
+      description: 'Global chicken restaura',
+      price: '350',
+      veg: true,
+      quantity: 0
+    }
+  ],
+  status: 'pending',
+  address: 'W5Q9+WG9, Madurai, Tamil Nadu 625020, India',
+  deliveryBy: null,
+  deliveredAt: null,
+  menucount: 1,
+  subtotal: 350,
+  total: 453,
+  orderedAt: '2024-08-16 10:08:55',
+  createdAt: 2024-08-16T10:55:48.085Z,
+  updatedAt: 2024-08-16T10:55:48.085Z,
+  __v: 0
+}
+New order status:  {
+  status: '',
+  id: '66bf303454d5f34c3c1782fa',
+  latitude: '',
+  longitude: ''
+}
+firebase data added
+Server started on port 8080
+New order status:  {
+  longitude: 80.1889199,
+  status: 'Payment received',
+  latitude: 12.9197273,
+  id: '66bc449ee5ecb789f4c4e8ac'
+}
+New order status:  {
+  latitude: 12.9197246,
+  longitude: 80.1889209,
+  status: 'Payment received',
+  id: '66bc5758062ce3554c9952f6'
+}
+New order status:  {
+  id: '66bc593f062ce3554c9952f9',
+  longitude: 80.188918,
+  latitude: 12.9197181,
+  status: 'Payment received'
+}
+New order status:  {
+  latitude: 12.9197145,
+  longitude: 80.1889184,
+  id: '66bc5c66062ce3554c9952fc',
+  status: 'Payment received'
+}
+New order status:  {
+  longitude: 80.1889193,
+  latitude: 12.9196155,
+  status: 'order picked up',
+  id: '66bc5d65062ce3554c9952ff'
+}
+New order status:  {
+  id: '66bf046254d5f34c3c178298',
+  status: '',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  latitude: '',
+  id: '66bf1fb754d5f34c3c1782cf',
+  longitude: '',
+  status: ''
+}
+New order status:  {
+  status: '',
+  id: '66bf233b54d5f34c3c1782d8',
+  latitude: '',
+  longitude: ''
+}
+New order status:  {
+  latitude: '',
+  longitude: '',
+  id: '66bf23eb54d5f34c3c1782db',
+  status: ''
+}
+New order status:  {
+  latitude: '',
+  longitude: '',
+  status: '',
+  id: '66bf2ae654d5f34c3c1782f1'
+}
+New order status:  {
+  id: '66bf303454d5f34c3c1782fa',
+  status: '',
+  latitude: '',
+  longitude: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-01.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+New order status:  {
+  latitude: 12.9197273,
+  longitude: 80.1889199,
+  status: 'Payment received',
+  id: '66bc449ee5ecb789f4c4e8ac'
+}
+New order status:  {
+  status: 'Payment received',
+  longitude: 80.1889209,
+  latitude: 12.9197246,
+  id: '66bc5758062ce3554c9952f6'
+}
+New order status:  {
+  latitude: 12.9197181,
+  id: '66bc593f062ce3554c9952f9',
+  status: 'Payment received',
+  longitude: 80.188918
+}
+New order status:  {
+  id: '66bc5c66062ce3554c9952fc',
+  status: 'Payment received',
+  latitude: 12.9197145,
+  longitude: 80.1889184
+}
+New order status:  {
+  id: '66bc5d65062ce3554c9952ff',
+  latitude: 12.9196155,
+  longitude: 80.1889193,
+  status: 'order picked up'
+}
+New order status:  {
+  longitude: '',
+  latitude: '',
+  status: '',
+  id: '66bf046254d5f34c3c178298'
+}
+New order status:  {
+  longitude: '',
+  id: '66bf1fb754d5f34c3c1782cf',
+  status: '',
+  latitude: ''
+}
+New order status:  {
+  longitude: '',
+  status: '',
+  latitude: '',
+  id: '66bf233b54d5f34c3c1782d8'
+}
+New order status:  {
+  status: '',
+  id: '66bf23eb54d5f34c3c1782db',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  id: '66bf2ae654d5f34c3c1782f1',
+  latitude: '',
+  status: '',
+  longitude: ''
+}
+New order status:  {
+  id: '66bf303454d5f34c3c1782fa',
+  longitude: '',
+  latitude: '',
+  status: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+New order status:  {
+  latitude: 12.9197273,
+  longitude: 80.1889199,
+  status: 'Payment received',
+  id: '66bc449ee5ecb789f4c4e8ac'
+}
+New order status:  {
+  status: 'Payment received',
+  longitude: 80.1889209,
+  latitude: 12.9197246,
+  id: '66bc5758062ce3554c9952f6'
+}
+New order status:  {
+  id: '66bc593f062ce3554c9952f9',
+  status: 'Payment received',
+  latitude: 12.9197181,
+  longitude: 80.188918
+}
+New order status:  {
+  status: 'Payment received',
+  latitude: 12.9197145,
+  longitude: 80.1889184,
+  id: '66bc5c66062ce3554c9952fc'
+}
+New order status:  {
+  longitude: 80.1889193,
+  id: '66bc5d65062ce3554c9952ff',
+  status: 'order picked up',
+  latitude: 12.9196155
+}
+New order status:  {
+  id: '66bf046254d5f34c3c178298',
+  status: '',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  longitude: '',
+  id: '66bf1fb754d5f34c3c1782cf',
+  latitude: '',
+  status: ''
+}
+New order status:  {
+  latitude: '',
+  longitude: '',
+  id: '66bf233b54d5f34c3c1782d8',
+  status: ''
+}
+New order status:  {
+  status: '',
+  latitude: '',
+  id: '66bf23eb54d5f34c3c1782db',
+  longitude: ''
+}
+New order status:  {
+  id: '66bf2ae654d5f34c3c1782f1',
+  status: '',
+  longitude: '',
+  latitude: ''
+}
+New order status:  {
+  longitude: '',
+  status: '',
+  id: '66bf303454d5f34c3c1782fa',
+  latitude: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+New order status:  {
+  latitude: 12.9197273,
+  id: '66bc449ee5ecb789f4c4e8ac',
+  status: 'Payment received',
+  longitude: 80.1889199
+}
+New order status:  {
+  longitude: 80.1889209,
+  id: '66bc5758062ce3554c9952f6',
+  latitude: 12.9197246,
+  status: 'Payment received'
+}
+New order status:  {
+  status: 'Payment received',
+  longitude: 80.188918,
+  id: '66bc593f062ce3554c9952f9',
+  latitude: 12.9197181
+}
+New order status:  {
+  longitude: 80.1889184,
+  latitude: 12.9197145,
+  id: '66bc5c66062ce3554c9952fc',
+  status: 'Payment received'
+}
+New order status:  {
+  longitude: 80.1889193,
+  id: '66bc5d65062ce3554c9952ff',
+  latitude: 12.9196155,
+  status: 'order picked up'
+}
+New order status:  {
+  longitude: '',
+  id: '66bf046254d5f34c3c178298',
+  status: '',
+  latitude: ''
+}
+New order status:  {
+  status: '',
+  latitude: '',
+  longitude: '',
+  id: '66bf1fb754d5f34c3c1782cf'
+}
+New order status:  {
+  longitude: '',
+  id: '66bf233b54d5f34c3c1782d8',
+  status: '',
+  latitude: ''
+}
+New order status:  {
+  latitude: '',
+  status: '',
+  id: '66bf23eb54d5f34c3c1782db',
+  longitude: ''
+}
+New order status:  {
+  id: '66bf2ae654d5f34c3c1782f1',
+  latitude: '',
+  status: '',
+  longitude: ''
+}
+New order status:  {
+  longitude: '',
+  status: '',
+  id: '66bf303454d5f34c3c1782fa',
+  latitude: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-02.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+New order status:  {
+  status: 'Payment received',
+  latitude: 12.9197273,
+  id: '66bc449ee5ecb789f4c4e8ac',
+  longitude: 80.1889199
+}
+New order status:  {
+  status: 'Payment received',
+  longitude: 80.1889209,
+  latitude: 12.9197246,
+  id: '66bc5758062ce3554c9952f6'
+}
+New order status:  {
+  latitude: 12.9197181,
+  id: '66bc593f062ce3554c9952f9',
+  status: 'Payment received',
+  longitude: 80.188918
+}
+New order status:  {
+  status: 'Payment received',
+  id: '66bc5c66062ce3554c9952fc',
+  latitude: 12.9197145,
+  longitude: 80.1889184
+}
+New order status:  {
+  latitude: 12.9196155,
+  status: 'order picked up',
+  longitude: 80.1889193,
+  id: '66bc5d65062ce3554c9952ff'
+}
+New order status:  {
+  status: '',
+  longitude: '',
+  id: '66bf046254d5f34c3c178298',
+  latitude: ''
+}
+New order status:  {
+  id: '66bf1fb754d5f34c3c1782cf',
+  latitude: '',
+  status: '',
+  longitude: ''
+}
+New order status:  {
+  status: '',
+  longitude: '',
+  latitude: '',
+  id: '66bf233b54d5f34c3c1782d8'
+}
+New order status:  {
+  id: '66bf23eb54d5f34c3c1782db',
+  longitude: '',
+  latitude: '',
+  status: ''
+}
+New order status:  {
+  longitude: '',
+  status: '',
+  latitude: '',
+  id: '66bf2ae654d5f34c3c1782f1'
+}
+New order status:  {
+  status: '',
+  id: '66bf303454d5f34c3c1782fa',
+  latitude: '',
+  longitude: ''
+}
+MongoDB connected on ac-3amawiz-shard-00-01.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-02.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-01.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-02.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+Server started on port 8080
+MongoDB connected on ac-3amawiz-shard-00-00.zlug8dk.mongodb.net
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+firebase data added
+/api/v1/home
+/api/v1/home
+/favicon.ico
+firebase data added
+/api/v1/home
+/api/v1/home
+firebase data added
+Modified order status:  {
+  status: 'accepted',
+  longitude: 80.1889193,
+  id: '66bc5d65062ce3554c9952ff',
+  latitude: 12.9196155
+}
+firebase data updated

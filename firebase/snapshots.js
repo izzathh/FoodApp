@@ -6,7 +6,6 @@ async function listenForFirebase() {
         firestore.collection('order-delivery-status').onSnapshot(snapshot => {
             snapshot.docChanges().forEach(async (change) => {
                 if (change.type === 'added') {
-                    console.log('New order status: ', change.doc.data());
                     const { id, status } = change.doc.data()
                     await Orders.findByIdAndUpdate(id, {
                         $set: { status }

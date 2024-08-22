@@ -1,14 +1,6 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
-const Admin = require("../models/admin.model");
-const { NotFound, BadRequest, ValidationError } = require("../utils/errors");
-const {
-  verifyEmailAndSentOtp,
-  fetchUserFromEmailAndOtp,
-  updatePassword,
-} = require("../services/auth.service");
-const { mongo, default: mongoose } = require("mongoose");
+const { BadRequest, ValidationError } = require("../utils/errors");
+const { default: mongoose } = require("mongoose");
 
 const registerUser = async (req, res, next) => {
   try {
