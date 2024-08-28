@@ -6,6 +6,7 @@ const WebSocket = require('ws');
 const { getWebSocketServer } = require('../websocket');
 const { getFirebaseAdmin } = require('../firebase');
 const DeliveryPeople = require('../models/deliveryPeople.model');
+const { calculateDeliveryCharge, calculateDistance, calculateTax } = require('../services/delivery.service')
 
 const placeOrder = async (req, res, next) => {
     try {
@@ -17,7 +18,9 @@ const placeOrder = async (req, res, next) => {
             address,
             menucount,
             subtotal,
-            total
+            latitude,
+            longitude,
+            coordinates
         } = req.body;
 
         const getLastOrder = await Orders
@@ -34,6 +37,15 @@ const placeOrder = async (req, res, next) => {
                 : `FA-${currentDate.format('YYYYMMDD')}-${Number(getLastOrder[0].orderId.split('-')[2]) + 1}`
         }
 
+        const destination = latitude + ',' + longitude;
+        const distance = await calculateDistance(coordinates, destination)
+        if (!distance)
+            return res.status(500).json({ status: 0, message: "Can't find locations" })
+        const deliveryCharge = calculateDeliveryCharge(distance)
+        const roundedDeliveryCharge = Math.round(deliveryCharge)
+        const { tax, total } = calculateTax(Number(subtotal), roundedDeliveryCharge)
+        console.log(distance, tax, total);
+
         const newOrder = new Orders({
             restaurantId,
             userId,
@@ -42,13 +54,18 @@ const placeOrder = async (req, res, next) => {
             status,
             address,
             menucount,
+            userLatitude: latitude,
+            userLongitude: longitude,
+            distance: distance,
+            deliveryCharge: roundedDeliveryCharge,
+            tax,
             subtotal,
             total
         })
 
         await newOrder.save();
 
-        return res.json({
+        return res.status(200).json({
             status: 1,
             message: 'Order placed successfully',
             data: {

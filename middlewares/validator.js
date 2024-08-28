@@ -102,6 +102,11 @@ const validate = (method) => {
             body('itemData')
                 .notEmpty().withMessage('Item data is required')
                 .isArray().withMessage('Item data should be an array')
+        ],
+        "getMyOrders": [
+            param('id')
+                .notEmpty().withMessage('Delivery people id is required')
+                .isMongoId().withMessage('Invalid delivery people id')
         ]
     }
     return options[method] || []

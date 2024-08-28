@@ -44,6 +44,26 @@ const OrdersSchema = new mongoose.Schema(
         orderedAt: {
             type: String,
             default: moment().format('YYYY-MM-DD HH:mm:ss')
+        },
+        userLatitude: {
+            type: String,
+            required: [true, "User latitude is required"]
+        },
+        userLongitude: {
+            type: String,
+            required: [true, "User longitude is required"]
+        },
+        distance: {
+            type: Number,
+            required: [true, "Distance is required"]
+        },
+        deliveryCharge: {
+            type: Number,
+            required: [true, "Delivery charge is required"]
+        },
+        tax: {
+            type: Number,
+            required: [true, "Tax is required"]
         }
     },
     {

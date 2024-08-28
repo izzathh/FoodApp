@@ -11,11 +11,11 @@ const RestaurantSchema = new mongoose.Schema(
         deliveryTime: { type: String, default: '0-0mins' },
         delivery: { type: Boolean, default: true },
         rating: { type: String, default: '0.0' },
-        offer: { type: String, default: null },
+        offer: { type: String, default: "" },
         veg: { type: Boolean, default: false },
         description: { type: String, required: true },
         fullDescription: { type: String, required: true },
-        coordinates: { type: String, default: '9.939741,78.168617' },
+        coordinates: { type: String, required: true },
         menu: { type: Array, default: [] },
         adminId: {
             type: mongoose.Types.ObjectId,

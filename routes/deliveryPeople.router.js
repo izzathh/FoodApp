@@ -9,7 +9,9 @@ const {
     shiftDpStatus,
     acceptOrderDelivery,
     getAllPendingOrders,
-    getAcceptedOrderDetails
+    getAcceptedOrderDetails,
+    getAllDeliveryPeepOrders,
+    getTotalEarningsOfDp
 } = require('../controllers/deliveryPeople.controller')
 
 router.route('/register-delivery-people').post(registerDeliveryPeople);
@@ -36,5 +38,15 @@ router.route('/get-accepted-order/:id/:deliveryBy')
     .all(validate('getAcceptedOrder'))
     .all(handleValidation)
     .get(getAcceptedOrderDetails)
+
+router.route('/get-my-orders/:id')
+    .all(validate('getMyOrders'))
+    .all(handleValidation)
+    .get(getAllDeliveryPeepOrders)
+
+router.route('/get-my-earnings/:id')
+    .all(validate('getMyOrders'))
+    .all(handleValidation)
+    .get(getTotalEarningsOfDp)
 
 module.exports = router

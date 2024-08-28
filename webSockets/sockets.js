@@ -24,7 +24,6 @@ const checkRestaurantRequest = async (wss) => {
     adminChange.on('change', (data) => {
         if (data.operationType === 'insert' && !data.fullDocument.adminApproved) {
             const newRestaurant = data.fullDocument
-            console.log('New Restaraunt Request:', newRestaurant);
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify({ type: 'newRestaurant', data: newRestaurant }))

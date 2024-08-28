@@ -49,15 +49,13 @@ const adminLogin = async (req, res, next) => {
           throw new Error(err);
         }
         admin.password = undefined;
-        const options = rememberMe
-          ? {
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
-            path: '/',
-            sameSite: 'Strict',
-            secure: false
-          }
-          : { httpOnly: false, path: '/', sameSite: 'Strict', secure: false };
+        const options = {
+          maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : undefined,
+          httpOnly: false,
+          path: '/',
+          sameSite: 'Lax',
+          secure: false
+        }
 
         res.cookie('auth_token', token, options);
         res
@@ -88,12 +86,11 @@ const addNewRestaurant = async (req, res) => {
       offer,
       veg,
       description,
-      fullDescription
+      fullDescription,
+      coordinates
     } = req.body;
 
     const image = req.file;
-
-    console.log('offer:', offer);
 
     const addRestaurant = new Restaurant({
       address,
@@ -106,6 +103,7 @@ const addNewRestaurant = async (req, res) => {
       description,
       fullDescription,
       adminApproved: true,
+      coordinates,
       image: 'data:image/png;base64,' + image.buffer.toString('base64')
     })
 
@@ -161,6 +159,7 @@ const updateRestaurant = async (req, res) => {
       veg,
       description,
       fullDescription,
+      coordinates,
       image } = req.body;
 
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(id,
@@ -174,7 +173,8 @@ const updateRestaurant = async (req, res) => {
         offer,
         veg,
         description,
-        fullDescription
+        fullDescription,
+        coordinates
       }, { new: true });
 
     if (!updatedRestaurant) {
@@ -228,7 +228,8 @@ const addMenuItems = async (req, res) => {
     const image = req.file
 
     const updatedRestaurant = await Restaurant.findById(restaurantId);
-    const itemId = updatedRestaurant.menu.length + 1
+    // const itemId = updatedRestaurant.menu.length + 1
+    const itemId = mongoose.Types.ObjectId()
     updatedRestaurant.menu.push({
       id: itemId,
       categoryId: mongoose.Types.ObjectId(categoryId),
@@ -294,16 +295,15 @@ const editMenuItems = async (req, res) => {
       return res.status(400).json({ status: 0, message: 'Invalid restaurant ID' });
     }
 
-    const restaurantObjectId = mongoose.Types.ObjectId(restaurantId);
     const menuItems = await Restaurant.findOneAndUpdate(
       {
-        _id: restaurantObjectId,
-        'menu.id': Number(menuId)
+        _id: mongoose.Types.ObjectId(restaurantId),
+        'menu.id': mongoose.Types.ObjectId(menuId)
       },
       {
         $set: {
-          'menu.$.categoryId': categoryId,
-          'menu.$.subCategoryId': subCategoryId,
+          'menu.$.categoryId': mongoose.Types.ObjectId(categoryId),
+          'menu.$.subCategoryId': mongoose.Types.ObjectId(subCategoryId),
           'menu.$.itemName': itemName,
           'menu.$.description': description,
           'menu.$.fullDescription': fullDescription,
@@ -477,7 +477,9 @@ const getRestaurantDishes = [
 
       const addedCatSubCat = await Promise.all(getDishes.menu.map(async (dish) => {
         const categoryName = await Category.findById(dish.categoryId).select('categoryName')
+        console.log('categoryName:', categoryName);
         const subCategoryName = await SubCategory.findById(dish.subCategoryId).select('subCategoryName')
+        console.log('subCategoryName:', subCategoryName);
         let updatedData = []
         const addCatSub = {
           ...dish,
@@ -542,10 +544,11 @@ const deleteCategory = async (req, res, next) => {
   try {
     const { categoryId, restaurantId } = req.body;
     await Category.findByIdAndDelete(categoryId);
-    await SubCategory.deleteMany({ categoryId });
-    await Restaurant.updateOne(
+    const id = mongoose.Types.ObjectId(categoryId)
+    await SubCategory.deleteMany({ categoryId: id });
+    await Restaurant.findOneAndUpdate(
       { _id: mongoose.Types.ObjectId(restaurantId) },
-      { $pull: { menu: { categoryId } } }
+      { $pull: { menu: { categoryId: id } } }
     );
     return res.status(200).json({ status: 1, message: 'Category deleted successfully' })
   } catch (error) {
