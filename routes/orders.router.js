@@ -12,7 +12,8 @@ const {
     updateOrderStatus,
     getRestaurantOrderList,
     deleteOrder,
-    getUserOrders
+    getUserOrders,
+    otherOrderCharges
 } = require('../controllers/orders.controller');
 
 router.route('/place-order').post(upload.any(), placeOrder)
@@ -29,5 +30,10 @@ router.route('/get-user-orders/:userId')
     .all(validate('getUserOrders'))
     .all(handleValidation)
     .get(getUserOrders)
+
+router.route('/order-charges')
+    .all(validate('otherOrderCharges'))
+    .all(handleValidation)
+    .post(otherOrderCharges)
 
 module.exports = router

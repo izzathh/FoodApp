@@ -409,7 +409,7 @@ const registerRestaurant = async (req, res) => {
       username,
       adminType: 'shop-admin',
       restaurantId: mongoose.Types.ObjectId(newRestaurant._id),
-      registeredAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      registeredAt: moment().format(TIMEFORMAT),
     })
 
     await newAdmin.save();
@@ -477,9 +477,7 @@ const getRestaurantDishes = [
 
       const addedCatSubCat = await Promise.all(getDishes.menu.map(async (dish) => {
         const categoryName = await Category.findById(dish.categoryId).select('categoryName')
-        console.log('categoryName:', categoryName);
         const subCategoryName = await SubCategory.findById(dish.subCategoryId).select('subCategoryName')
-        console.log('subCategoryName:', subCategoryName);
         let updatedData = []
         const addCatSub = {
           ...dish,

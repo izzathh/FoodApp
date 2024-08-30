@@ -43,7 +43,7 @@ const OrdersSchema = new mongoose.Schema(
         },
         orderedAt: {
             type: String,
-            default: moment().format('YYYY-MM-DD HH:mm:ss')
+            required: [true, "Order time is required"]
         },
         userLatitude: {
             type: String,

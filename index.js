@@ -18,7 +18,7 @@ const { initializeWebSocketServer } = require("./websocket");
 const Admins = require('./models/admin.model');
 const { firestore } = require('./firebase');
 const { listenForFirebase } = require("./firebase/snapshots");
-const { calculateDistance } = require("./services/delivery.service");
+require('./services/constants')
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));

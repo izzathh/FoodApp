@@ -10,7 +10,7 @@ async function listenForFirebase() {
                     await Orders.findByIdAndUpdate(id, {
                         $set: { status }
                     })
-                    console.log('firebase data added');
+                    // console.log('firebase data added');
                 }
                 if (change.type === 'modified') {
                     console.log('Modified order status: ', change.doc.data());
@@ -23,9 +23,9 @@ async function listenForFirebase() {
                 if (change.type === 'removed') {
                     console.log('Removed order status: ', change.doc.data());
                     const { id, status } = change.doc.data()
-                    if (status === 'order delivered') {
+                    if (status === ORDER_DELIVERED) {
                         await Orders.findByIdAndUpdate(id, {
-                            $set: { status: "payment received" }
+                            $set: { status: PAYMENT_RECEIVED }
                         })
                         console.log('payment received from the order');
                     }

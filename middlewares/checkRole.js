@@ -154,9 +154,6 @@ const checkIsSuperOrPrintingAdmin = async (req, res, next) => {
   }
 
   const adminType = admin.adminType;
-
-  console.log("adminType", adminType);
-
   //Check for token
   if (adminType !== "super" && adminType !== "printing") {
     return res

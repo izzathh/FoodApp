@@ -29,10 +29,7 @@ const calculateDistance = async (origin, destination) => {
     try {
         const response = await axios.get(url);
         if (response.data.rows[0].elements[0].status === "OK") {
-            console.log('response:', response.data.rows[0].elements);
-
             const distance = response.data.rows[0].elements[0].distance.text;
-            console.log(`Distance: ${distance.split(' km')[0]}`);
             return Number(distance.split(' km')[0])
         } else {
             console.error('Error fetching distance:', response.data.rows[0].elements[0].status);

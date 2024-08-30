@@ -43,7 +43,7 @@ const registerDeliveryPeople = async (req, res, next) => {
         const newDeliveryPeople = new DeliveryPeople({
             vehicleNumber,
             name,
-            registeredAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+            registeredAt: moment().format(TIMEFORMAT),
             phoneNumber
         });
         await newDeliveryPeople.save();
@@ -189,7 +189,7 @@ const shiftDpStatus = async (req, res, next) => {
 const getAllPendingOrders = async (req, res, next) => {
     try {
 
-        const getPendingOrders = await Orders.find({ status: 'confirmed' })
+        const getPendingOrders = await Orders.find({ status: CONFIRMED })
         let orders = []
         for (const order of getPendingOrders) {
             const restaurant = await Restaurant.findById(order.restaurantId)
@@ -214,7 +214,7 @@ const acceptOrderDelivery = async (req, res, next) => {
         const { _id, deliveryPeopleId } = req.body
         await Orders.findByIdAndUpdate(_id, {
             deliveryBy: deliveryPeopleId,
-            status: 'accepted'
+            status: ORDER_ACCEPTED
         })
         return res.status(200).json({ status: 1, message: 'Order accepted' })
     } catch (error) {
@@ -253,7 +253,7 @@ const getAcceptedOrderDetails = async (req, res, next) => {
 const getAllDeliveryPeepOrders = async (req, res, next) => {
     const { id } = req.params
     try {
-        const orders = await Orders.find({ deliveryBy: id, status: 'accepted' })
+        const orders = await Orders.find({ deliveryBy: id, status: ORDER_ACCEPTED })
         return res.status(200).json({
             status: 1,
             message: 'Fetched delivery poeple orders',
@@ -272,15 +272,13 @@ const getTotalEarningsOfDp = async (req, res, next) => {
     const { id } = req.params
     try {
         const orders = await Orders
-            .find({ deliveryBy: id, status: 'payment received' })
+            .find({ deliveryBy: id, status: PAYMENT_RECEIVED })
             .select('total')
-        console.log('orders:', orders);
 
         let total = 0
         orders.forEach(order => {
             total += order.total
         })
-        console.log('total:', total);
 
         return res.status(200).json({
             status: 1,

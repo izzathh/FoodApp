@@ -107,6 +107,56 @@ const validate = (method) => {
             param('id')
                 .notEmpty().withMessage('Delivery people id is required')
                 .isMongoId().withMessage('Invalid delivery people id')
+        ],
+        "otherOrderCharges": [
+            body('latitude')
+                .notEmpty().withMessage('Latitude is required'),
+            body('longitude')
+                .notEmpty().withMessage('Longitude is required'),
+            body('coordinates')
+                .notEmpty().withMessage('Coordinates is required')
+                .isString().withMessage('Invalid coordinates'),
+            body('subtotal')
+                .notEmpty().withMessage('Subtotal is required')
+        ],
+        "changeDefaultAddress": [
+            body('userId')
+                .notEmpty().withMessage('User id is required')
+                .isMongoId().withMessage('Invalid user id'),
+            body('addressId')
+                .notEmpty().withMessage('Address id is required')
+        ],
+        "getAllAddress": [
+            query('userId')
+                .notEmpty().withMessage('User id is required')
+                .isMongoId().withMessage('Invalid user id')
+        ],
+        "addNewAddress": [
+            body('userId')
+                .notEmpty().withMessage('User id is required')
+                .isMongoId().withMessage('Invalid user id'),
+            body('address')
+                .notEmpty().withMessage('Address is required'),
+            body('title')
+                .notEmpty().withMessage('Title is required'),
+            body('latlng')
+                .notEmpty().withMessage('latlng is required')
+        ],
+        "userLogin": [
+            body('phonenumber')
+                .notEmpty('Phone number is required')
+        ],
+        "userRegister": [
+            body('name')
+                .notEmpty().withMessage('Name is required'),
+            body('email')
+                .notEmpty().withMessage('Email is required'),
+            body('phonenumber')
+                .notEmpty().withMessage('Phone number is required'),
+            body('address')
+                .notEmpty().withMessage('Address is required'),
+            body('latlng')
+                .notEmpty().withMessage('Latlng is required'),
         ]
     }
     return options[method] || []

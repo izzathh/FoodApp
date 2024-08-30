@@ -1,7 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Orders = require('../models/orders.model')
 const Restaurant = require('../models/restaurants.model')
-const moment = require("moment");
+const momentTz = require('moment-timezone');
 const WebSocket = require('ws');
 const { getWebSocketServer } = require('../websocket');
 const { getFirebaseAdmin } = require('../firebase');
@@ -20,47 +20,31 @@ const placeOrder = async (req, res, next) => {
             subtotal,
             latitude,
             longitude,
-            coordinates
+            distance,
+            deliveryCharge,
+            tax,
+            total
         } = req.body;
 
-        const getLastOrder = await Orders
-            .find({ restaurantId: new mongoose.Types.ObjectId(restaurantId) })
-            .sort({ createdAt: -1 })
-            .limit(1);
-
-        let orderId
-        const currentDate = moment().startOf('day')
-        if (getLastOrder.length > 0) {
-            const lastOrderDate = moment(getLastOrder[0].orderedAt).startOf('day')
-            orderId = currentDate.isAfter(lastOrderDate)
-                ? `FA-${currentDate.format('YYYYMMDD')}-1`
-                : `FA-${currentDate.format('YYYYMMDD')}-${Number(getLastOrder[0].orderId.split('-')[2]) + 1}`
-        }
-
-        const destination = latitude + ',' + longitude;
-        const distance = await calculateDistance(coordinates, destination)
-        if (!distance)
-            return res.status(500).json({ status: 0, message: "Can't find locations" })
-        const deliveryCharge = calculateDeliveryCharge(distance)
-        const roundedDeliveryCharge = Math.round(deliveryCharge)
-        const { tax, total } = calculateTax(Number(subtotal), roundedDeliveryCharge)
-        console.log(distance, tax, total);
-
+        const timestamp = momentTz.tz(TIMEZONE).format('YYYYMMDDHHmmss');
+        const orderId = 'FA-' + timestamp
+        const orderedAt = momentTz.tz(TIMEZONE).format(TIMEFORMAT);
         const newOrder = new Orders({
             restaurantId,
             userId,
-            orderId: orderId || `FA-${currentDate.format('YYYYMMDD')}-1`,
+            orderId,
             menu: typeof menu == 'object' ? menu : JSON.parse(menu),
             status,
             address,
             menucount,
             userLatitude: latitude,
             userLongitude: longitude,
-            distance: distance,
-            deliveryCharge: roundedDeliveryCharge,
+            distance,
+            deliveryCharge,
             tax,
             subtotal,
-            total
+            total,
+            orderedAt
         })
 
         await newOrder.save();
@@ -79,20 +63,47 @@ const placeOrder = async (req, res, next) => {
     }
 }
 
+const otherOrderCharges = async (req, res, next) => {
+    const { latitude, longitude, coordinates, subtotal } = req.body
+    try {
+        const destination = latitude + ',' + longitude;
+        const distance = await calculateDistance(coordinates, destination)
+        if (!distance)
+            return res.status(500).json({ status: 0, message: "Can't find locations" })
+        const calcDeliveryCharge = calculateDeliveryCharge(distance)
+        const deliveryCharge = Math.round(calcDeliveryCharge)
+        const { tax, total } = calculateTax(Number(subtotal), deliveryCharge)
+        return res.status(200).json({
+            status: 1,
+            message: 'Fetched other order charges',
+            data: {
+                distance,
+                tax,
+                deliveryCharge,
+                total
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+}
+
 const getPendingOrders = async (req, res, next) => {
     try {
         let filter
         if (!req.query.forRestaurant || req.query.forRestaurant == '1') {
             filter = {
                 restaurantId: mongoose.Types.ObjectId(req.query.id),
-                status: 'pending'
+                status: PENDING
             }
         } else {
             filter = {
-                status: 'pending'
+                status: PENDING
             }
         }
-        const getPendingOrders = await Orders.find(filter)
+
+        const getPendingOrders = await Orders.find(filter).sort({ createdAt: -1 })
 
         return res.json({
             status: 1,
@@ -125,7 +136,7 @@ const updateOrderStatus = async (req, res) => {
         }
 
         if (updateStatus) {
-            if (status === 'confirmed') {
+            if (status === CONFIRMED) {
                 const admin = getFirebaseAdmin();
                 const getDeliveryPeoples = await DeliveryPeople.findOne({
                     _id: "668e675dbb7e02cf2db711f0",
@@ -177,8 +188,9 @@ const getRestaurantOrderList = async (req, res) => {
         if (!restaurantId || !mongoose.Types.ObjectId.isValid(restaurantId)) {
             return res.status(400).json({ status: 0, message: 'Please enter a valid restaurant ID' })
         }
-        const getRestaurantOrders = await Orders.find({ restaurantId, status: { $ne: 'pending' } })
-        console.log('getRestaurantOrders:', getRestaurantOrders);
+        const getRestaurantOrders = await Orders
+            .find({ restaurantId, status: { $ne: PENDING } })
+            .sort({ createdAt: -1 })
         return res.json({ status: 1, orders: getRestaurantOrders })
     } catch (error) {
         return res.status(500).json({ status: 0, message: error })
@@ -189,7 +201,6 @@ const deleteOrder = async (req, res, next) => {
     try {
         const { restaurantId, orderId } = req.body;
         const deleteOrder = await Orders.findOneAndDelete({ restaurantId, orderId })
-        console.log('deleteOrder:', deleteOrder);
         if (deleteOrder) {
             return res.status(200).json({ status: 1, message: 'Order deleted successfully' })
         }
@@ -235,5 +246,6 @@ module.exports = {
     updateOrderStatus,
     getRestaurantOrderList,
     deleteOrder,
-    getUserOrders
+    getUserOrders,
+    otherOrderCharges
 }
