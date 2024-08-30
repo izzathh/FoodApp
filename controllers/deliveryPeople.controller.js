@@ -253,7 +253,12 @@ const getAcceptedOrderDetails = async (req, res, next) => {
 const getAllDeliveryPeepOrders = async (req, res, next) => {
     const { id } = req.params
     try {
-        const orders = await Orders.find({ deliveryBy: id, status: ORDER_ACCEPTED })
+        const orders = await Orders.find({
+            deliveryBy: id,
+            status: {
+                $nin: [CONFIRMED, PENDING]
+            }
+        })
         return res.status(200).json({
             status: 1,
             message: 'Fetched delivery poeple orders',
