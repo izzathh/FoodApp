@@ -53,7 +53,7 @@ router.route("/edit-menu-items").post(upload.any(), editMenuItems)
 
 router.route("/delete-menu-item").delete(deleteMenuItem)
 
-router.route("/register-restaurant").post(upload.any(), registerRestaurant)
+router.route("/register-restaurant").post(upload.single('image'), registerRestaurant)
 
 router.route("/get-restaurant-requests").get(getRestaurantRequests);
 

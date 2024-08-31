@@ -144,7 +144,8 @@ const validate = (method) => {
         ],
         "userLogin": [
             body('phonenumber')
-                .notEmpty('Phone number is required')
+                .notEmpty()
+                .withMessage('Phone number is required')
         ],
         "userRegister": [
             body('name')

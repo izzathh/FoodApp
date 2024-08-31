@@ -20,7 +20,7 @@ const { firestore } = require('./firebase');
 const { listenForFirebase } = require("./firebase/snapshots");
 require('./services/constants')
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const corsOptions = {

@@ -1,6 +1,7 @@
 // ORDER STATUS FLAGS
 global.PENDING = 'pending',
     global.CONFIRMED = 'confirmed',
+    global.REJECTED = 'rejected',
     global.ORDER_ACCEPTED = 'accepted',
     global.STARTED_TO_RESTAURANT = 'started to restaurant',
     global.ORDER_PICKED = 'order picked up',

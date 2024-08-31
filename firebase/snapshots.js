@@ -10,7 +10,6 @@ async function listenForFirebase() {
                     await Orders.findByIdAndUpdate(id, {
                         $set: { status }
                     })
-                    // console.log('firebase data added');
                 }
                 if (change.type === 'modified') {
                     console.log('Modified order status: ', change.doc.data());

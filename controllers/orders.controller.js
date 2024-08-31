@@ -119,10 +119,10 @@ const getPendingOrders = async (req, res, next) => {
 const updateOrderStatus = async (req, res) => {
     try {
         const { orderUniqueId, status, restaurantId } = req.body;
-
+        const newSts = status === CONFIRMED ? CONFIRMED : REJECTED
         const updateStatus = await Orders.findOneAndUpdate(
             { _id: orderUniqueId, restaurantId },
-            { $set: { status } },
+            { $set: { status: newSts } },
             { new: true }
         )
         let modifiedMenu
@@ -138,18 +138,19 @@ const updateOrderStatus = async (req, res) => {
         if (updateStatus) {
             if (status === CONFIRMED) {
                 const admin = getFirebaseAdmin();
-                const getDeliveryPeoples = await DeliveryPeople.findOne({
-                    _id: "668e675dbb7e02cf2db711f0",
+                const getDeliveryPeoples = await DeliveryPeople.find({
                     adminApproved: true,
                     shiftStatus: 1
                 })
-                if (getDeliveryPeoples && getDeliveryPeoples.fcmToken) {
+                if (getDeliveryPeoples.length !== 0 && getDeliveryPeoples[0].fcmToken) {
                     const message = {
                         data: {
-                            orderDetails: JSON.stringify({ ...updateStatus._doc, menu: updateStatus.menu = modifiedMenu }),
+                            orderDetails: JSON.stringify({
+                                ...updateStatus._doc, menu: updateStatus.menu = modifiedMenu
+                            }),
                             orderAccepted: '0'
                         },
-                        token: getDeliveryPeoples.fcmToken
+                        token: getDeliveryPeoples[0].fcmToken
                     }
                     admin.messaging().send(message)
                         .then((response) => {
@@ -189,7 +190,7 @@ const getRestaurantOrderList = async (req, res) => {
             return res.status(400).json({ status: 0, message: 'Please enter a valid restaurant ID' })
         }
         const getRestaurantOrders = await Orders
-            .find({ restaurantId, status: { $ne: PENDING } })
+            .find({ restaurantId, status: { $nin: [PENDING, REJECTED] } })
             .sort({ createdAt: -1 })
         return res.json({ status: 1, orders: getRestaurantOrders })
     } catch (error) {
@@ -214,7 +215,7 @@ const deleteOrder = async (req, res, next) => {
 const getUserOrders = async (req, res, next) => {
     const { userId } = req.params
     try {
-        const getOrders = await Orders.find({ userId });
+        const getOrders = await Orders.find({ userId }).sort({ createdAt: -1 });
 
         const modifiedOrders = await Promise.all(getOrders.map(async (order) => {
             const getRestaurant = await Restaurant

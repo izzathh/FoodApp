@@ -258,7 +258,8 @@ const getAllDeliveryPeepOrders = async (req, res, next) => {
             status: {
                 $nin: [CONFIRMED, PENDING]
             }
-        })
+        }).sort({ createdAt: -1 })
+
         return res.status(200).json({
             status: 1,
             message: 'Fetched delivery poeple orders',

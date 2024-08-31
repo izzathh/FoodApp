@@ -8,6 +8,7 @@ const { BadRequest, NotFound, ValidationError } = require("../utils/errors");
 const { default: mongoose } = require("mongoose");
 const moment = require("moment");
 const { query, validationResult } = require("express-validator");
+const getBase64 = require('../services/base64')
 
 const adminLogin = async (req, res, next) => {
   const { username, password, rememberMe } = req.body;
@@ -369,11 +370,11 @@ const registerRestaurant = async (req, res) => {
       address,
       city,
       restaurantName,
-      image,
       offer,
       veg,
       description,
-      fullDescription
+      fullDescription,
+      coordinates
     } = req.body;
 
     const findEmail = await Admin.findOne({ email });
@@ -390,6 +391,7 @@ const registerRestaurant = async (req, res) => {
         message: 'This username is already taken'
       })
     }
+    const image = getBase64(req.file)
     const newRestaurant = new Restaurant({
       address,
       city,
@@ -398,7 +400,8 @@ const registerRestaurant = async (req, res) => {
       offer,
       veg,
       description,
-      fullDescription
+      fullDescription,
+      coordinates
     })
 
     await newRestaurant.save()
